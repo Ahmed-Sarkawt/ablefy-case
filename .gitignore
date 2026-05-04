@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# Database (keep schema, ignore runtime data)
+prototype/dev.db
+prototype/*.db
+prototype/server/db/*.db
+prototype/server/db/*.db-journal
+prototype/server/db/*.db-wal
+prototype/server/db/*.db-shm
+
+# Presentation transient state
+presentation/.stale
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Test output
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# Claude Code (local-only settings + transient state)
+.claude/settings.local.json
+.claude/.cache/
+.claude/logs/
+.claude/.review-queue.txt
+
+# Logs
+*.log
+npm-debug.log*

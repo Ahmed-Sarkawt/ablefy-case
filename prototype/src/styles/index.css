@@ -1,0 +1,24 @@
+/** @license MIT */
+@import './tokens.css';
+@import './animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset <dialog> browser defaults so our Tailwind classes take full effect */
+dialog {
+  padding: 0;
+  border: none;
+  max-width: min(calc(100vw - 2rem), 32rem);
+  width: 100%;
+}
+
+/* Reinforce UA hidden state — our reset can suppress it in some browsers */
+dialog:not([open]) {
+  display: none;
+}
+
+dialog::backdrop {
+  background: rgba(33, 40, 46, 0.45);
+}

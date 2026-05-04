@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "prototype",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/cadis/Cadis/Projects/claude/ablefy-case-study/prototype",
+      "port": 5173
+    }
+  ]
+}

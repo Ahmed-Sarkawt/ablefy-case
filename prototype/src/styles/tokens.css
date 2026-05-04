@@ -1,0 +1,130 @@
+/**
+ * @license MIT
+ * Copyright (c) 2026 Firat Gomi
+ *
+ * ablefy design tokens.
+ * Single source of truth for color, spacing, radius, elevation, and motion.
+ * Source: docs/DESIGN-SYSTEM.md (extracted from authenticated screenshots).
+ */
+
+@font-face {
+  font-family: 'ES Klarheit Grotesk';
+  src: url('/fonts/ESKlarheitGrotesk-Rg-TRIAL.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ES Klarheit Grotesk';
+  src: url('/fonts/ESKlarheitGrotesk-Md-TRIAL.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ES Klarheit Grotesk';
+  src: url('/fonts/ESKlarheitGrotesk-Smbd-TRIAL.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ES Klarheit Grotesk';
+  src: url('/fonts/ESKlarheitGrotesk-Bd-TRIAL.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* === Brand & interactive === */
+  --color-primary: #17df87;
+  --color-primary-hover: #31ee95;
+  --color-primary-active: #05ab5b; /* AA-safe green for text on white */
+
+  /* === Neutrals === */
+  --color-sidebar: #21282e;
+  --color-ink: #21282e;
+  --color-muted: #6c757d;
+  --color-placeholder: #adb5bd;
+  --color-border: #d7dadf;
+
+  /* === Surfaces === */
+  --color-bg-page: #fafafc;
+  --color-bg-card: #ffffff;
+  --color-bg-surface: #f3f5f8;
+  --color-bg-canvas: #eceef2;
+  --color-text-soft: #4a4a4a;
+
+  /* === Status === */
+  --color-warn-bg: #fff8e6;
+  --color-warn-border: #ffb800;
+  --color-error: #ff1f39;
+
+  /* === 8px spacing scale === */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+
+  /* === Radius === */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* === Elevation === */
+  --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-med: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-high: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --shadow-fab: 0 4px 12px rgba(23, 223, 135, 0.35);
+
+  /* === Motion === */
+  --motion-fast: 150ms;
+  --motion-normal: 200ms;
+  --motion-slow: 300ms;
+  --easing-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --easing-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* === Type === */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-brand: 'ES Klarheit Grotesk', 'Inter', serif;
+  --elo-font-sans-serif: var(--font-sans);
+  --elo-font-serif: var(--font-brand);
+
+  /* === Focus ring === */
+  --ring-primary: 0 0 0 3px rgba(23, 223, 135, 0.15);
+  --ring-error: 0 0 0 3px rgba(255, 31, 57, 0.15);
+}
+
+/* Base reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-page);
+  color: var(--color-ink);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Focus-visible for keyboard users only */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-primary);
+}
