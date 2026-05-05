@@ -7,6 +7,7 @@
  * name, created/edited dates, price, sell toggle, share, and action menu.
  */
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { Button, CabinetShell } from '../components';
 import { useRequireAuth, getUserId } from '../lib/auth';
@@ -181,16 +182,18 @@ function ProductRow({
   onRowClick, onMenuToggle, onMenuClose,
   onShare, formatDate, formatPrice,
 }: RowProps): JSX.Element {
-  const menuRef = useRef<HTMLDivElement>(null);
+  const btnWrapRef = useRef<HTMLDivElement>(null);
+  const portalRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const [menuCoords, setMenuCoords] = useState<{ top: number; right: number } | null>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
     function handler(e: MouseEvent): void {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        onMenuClose();
-      }
+      const target = e.target as Node;
+      const insideBtn = btnWrapRef.current?.contains(target);
+      const insidePortal = portalRef.current?.contains(target);
+      if (!insideBtn && !insidePortal) onMenuClose();
     }
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -275,7 +278,7 @@ function ProductRow({
 
       {/* Action menu */}
       <td className="px-4 py-3">
-        <div ref={menuRef}>
+        <div ref={btnWrapRef}>
           <button
             ref={btnRef}
             type="button"
@@ -285,8 +288,9 @@ function ProductRow({
           >
             <IconDots />
           </button>
-          {menuOpen && menuCoords && (
+          {menuOpen && menuCoords && createPortal(
             <div
+              ref={portalRef}
               style={{ position: 'fixed', top: menuCoords.top, right: menuCoords.right, zIndex: 9999 }}
               className="min-w-[160px] overflow-hidden rounded-xl border border-border bg-bg-card shadow-med"
             >
@@ -307,7 +311,8 @@ function ProductRow({
                   {label}
                 </button>
               ))}
-            </div>
+            </div>,
+            document.body
           )}
         </div>
       </td>

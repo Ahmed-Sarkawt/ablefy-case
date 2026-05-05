@@ -90,7 +90,7 @@ export default function ProductsCreated(): JSX.Element {
               size="lg"
               onClick={() => {
                 fireAction('add_content');
-                navigate(`/products/${id}/content`);
+                navigate(`/products/${id}?tab=content`);
               }}
               className="!rounded-2xl w-full sm:w-auto"
             >
