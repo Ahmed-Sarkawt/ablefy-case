@@ -9,12 +9,12 @@ build/
 *.tsbuildinfo
 
 # Database (keep schema, ignore runtime data)
-prototype/dev.db
-prototype/*.db
-prototype/server/db/*.db
-prototype/server/db/*.db-journal
-prototype/server/db/*.db-wal
-prototype/server/db/*.db-shm
+dev.db
+*.db
+server/db/*.db
+server/db/*.db-journal
+server/db/*.db-wal
+server/db/*.db-shm
 
 # Presentation transient state
 presentation/.stale
