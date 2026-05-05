@@ -5,6 +5,7 @@
  * /dashboard — Step 3 of the redesigned flow per docs/FLOW.md.
  */
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button, CabinetShell, SetupSteps } from '../components';
 import { useRequireAuth, getUserId, getUserName } from '../lib/auth';
@@ -443,7 +444,7 @@ function OnboardingModal({
     }
   }
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
       style={{ backgroundColor: 'color-mix(in srgb, var(--color-bg-page) 55%, transparent)' }}
@@ -605,7 +606,8 @@ function OnboardingModal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

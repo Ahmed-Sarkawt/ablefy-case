@@ -5,7 +5,7 @@
       "name": "prototype",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "/Users/cadis/Cadis/Projects/claude/ablefy-case-study/prototype",
+      "cwd": "/Users/cadis/Cadis/Projects/claude/ablefy-case-study",
       "port": 5173
     }
   ]
