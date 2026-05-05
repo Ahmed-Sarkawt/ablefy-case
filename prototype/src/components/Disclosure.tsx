@@ -7,6 +7,7 @@
  */
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface DisclosureProps {
   /** Trigger label. Can include icons. */
@@ -45,22 +46,12 @@ export function Disclosure({
         className={triggerClasses}
       >
         <span>{label}</span>
-        <svg
+        <ChevronDown
           aria-hidden="true"
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
+          size={12}
+          strokeWidth={1.5}
           className={`transition-transform duration-fast ${open ? 'rotate-180' : ''}`}
-        >
-          <path
-            d="M2 4l4 4 4-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        />
       </button>
       <div
         id={panelId}

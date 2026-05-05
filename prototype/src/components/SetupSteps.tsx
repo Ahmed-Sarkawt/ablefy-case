@@ -6,6 +6,7 @@
  * Steps 1 & 2 are functional in the MVP; 3 & 4 unlock when prior steps are done.
  */
 import { Fragment } from 'react';
+import { Check } from 'lucide-react';
 
 interface Props {
   hasProducts: boolean;
@@ -45,7 +46,7 @@ export function SetupSteps({ hasProducts, step2Done = false }: Props): JSX.Eleme
                       : 'bg-bg-surface text-muted/40'
                   }`}
                 >
-                  {done ? <StepCheck /> : i + 1}
+                  {done ? <Check size={14} strokeWidth={2} aria-hidden="true" /> : i + 1}
                 </div>
                 <span className={`text-center text-[11px] font-semibold leading-tight ${done || isActive ? 'text-ink' : 'text-muted/40'}`}>
                   {step.label}
@@ -68,10 +69,3 @@ export function SetupSteps({ hasProducts, step2Done = false }: Props): JSX.Eleme
   );
 }
 
-function StepCheck(): JSX.Element {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M2.5 7l3 3 6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}

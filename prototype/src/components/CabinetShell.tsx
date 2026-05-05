@@ -7,6 +7,12 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getUserName, clearSession } from '../lib/auth';
+import {
+  Menu, Bell, Settings, LogOut, X, ChevronDown,
+  Home, Package, Files, Megaphone, TrendingUp, CreditCard,
+  GitBranch, Users, MessageCircle, Smartphone, BarChart2,
+  ShoppingCart, Wallet, ClipboardList,
+} from 'lucide-react';
 
 interface CabinetShellProps {
   title?: ReactNode;
@@ -27,10 +33,10 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Overview',       to: '/dashboard', icon: <NavIcon d="M3 9l6-6 6 6v9H9v-5H7v5H3z" /> },
+  { label: 'Overview',       to: '/dashboard', icon: <Home size={16} strokeWidth={1.5} /> },
   {
     label: 'Products', to: '/products', expandable: true,
-    icon: <NavIcon d="M2 7l8-5 8 5v9H2V7z M6 16V9h4v7" />,
+    icon: <Package size={16} strokeWidth={1.5} />,
     subItems: [
       { label: 'All products', to: '/products' },
       { label: 'Product categories' },
@@ -38,19 +44,19 @@ const NAV_ITEMS: NavItem[] = [
       { label: 'File library' },
     ],
   },
-  { label: 'Pages',          expandable: true,  icon: <NavIconPath d="M4 2h9l5 5v13H4V2zm9 0v5h5M7 9h8M7 12h8M7 15h5" /> },
-  { label: 'Market & Sell',  expandable: true,  icon: <NavIconPath d="M3 7H1v4h2L13 16V2L3 7zm10 1.5a3 3 0 010 3M15.5 5.5a7 7 0 010 9" /> },
-  { label: 'Sales OS',       expandable: true,  icon: <NavIconPath d="M2 14l4-4 4 4 4-8 2 2" /> },
-  { label: 'Payments',       expandable: true,  icon: <NavIconPath d="M1 5h16v10H1V5zm0 4h16M4 12h3" /> },
-  { label: 'Affiliate',      expandable: true,  icon: <NavIconPath d="M12 5a2 2 0 100-4 2 2 0 000 4zm0 0L8 9m0 0a2 2 0 100 4 2 2 0 000-4zm0 0L4 5m0 0a2 2 0 100-4 2 2 0 000 4zm0 0l4 4" /> },
-  { label: 'Customers',      expandable: true,  icon: <NavIconPath d="M6 7a2.5 2.5 0 100-5 2.5 2.5 0 000 5zm-4 7c.6-3 2.4-4.5 4-4.5s3.4 1.5 4 4.5m1-7.5a2 2 0 110-4 2 2 0 010 4zm2 7c-.4-2-1.8-3.5-3.5-3" /> },
-  { label: 'Community',      expandable: true,  badge: 'New', icon: <NavIconPath d="M15 10c0 3.3-3.1 6-7 6a8 8 0 01-3-.6L1 17l1.3-3.7A5.7 5.7 0 011 10c0-3.3 3.1-6 7-6s7 2.7 7 6z" /> },
-  { label: 'Mobile App',                        icon: <NavIconPath d="M5 1h8a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V2a1 1 0 011-1zm4 13h.01" /> },
-  { label: 'Analytics',      expandable: true,  icon: <NavIconPath d="M2 13h3V7H2v6zm5 0h3V3H7v10zm5 0h3V9h-3v4z" /> },
-  { label: 'Checkout Tools', expandable: true,  icon: <NavIconPath d="M1 2h2l2 8h9l1-5H5M12 15a1 1 0 100-2 1 1 0 000 2zm-4 0a1 1 0 100-2 1 1 0 000 2z" /> },
-  { label: 'Cashout',                           icon: <NavIconPath d="M9 1v2m0 12v2M5 3.7l1.4 1.4M12.6 11.3l1.4 1.4M3 9H1m14 0h-2M5 14.3l1.4-1.4M12.6 6.7l1.4-1.4M9 6a3 3 0 110 6 3 3 0 010-6z" /> },
-  { label: 'Logs',                              icon: <NavIconPath d="M3 4h12M3 8h9M3 12h6M3 16h8" /> },
-  { label: 'Settings',                          icon: <NavIconPath d="M9 1v2m0 12v2M5 3.7l1.4 1.4M12.6 11.3l1.4 1.4M3 9H1m14 0h-2M5 14.3l1.4-1.4M12.6 6.7l1.4-1.4M9 6a3 3 0 110 6 3 3 0 010-6z" /> },
+  { label: 'Pages',          expandable: true,  icon: <Files size={16} strokeWidth={1.5} /> },
+  { label: 'Market & Sell',  expandable: true,  icon: <Megaphone size={16} strokeWidth={1.5} /> },
+  { label: 'Sales OS',       expandable: true,  icon: <TrendingUp size={16} strokeWidth={1.5} /> },
+  { label: 'Payments',       expandable: true,  icon: <CreditCard size={16} strokeWidth={1.5} /> },
+  { label: 'Affiliate',      expandable: true,  icon: <GitBranch size={16} strokeWidth={1.5} /> },
+  { label: 'Customers',      expandable: true,  icon: <Users size={16} strokeWidth={1.5} /> },
+  { label: 'Community',      expandable: true,  badge: 'New', icon: <MessageCircle size={16} strokeWidth={1.5} /> },
+  { label: 'Mobile App',                        icon: <Smartphone size={16} strokeWidth={1.5} /> },
+  { label: 'Analytics',      expandable: true,  icon: <BarChart2 size={16} strokeWidth={1.5} /> },
+  { label: 'Checkout Tools', expandable: true,  icon: <ShoppingCart size={16} strokeWidth={1.5} /> },
+  { label: 'Cashout',                           icon: <Wallet size={16} strokeWidth={1.5} /> },
+  { label: 'Logs',                              icon: <ClipboardList size={16} strokeWidth={1.5} /> },
+  { label: 'Settings',                          icon: <Settings size={16} strokeWidth={1.5} /> },
 ];
 
 const NOTIFICATIONS_DATA = [
@@ -129,7 +135,7 @@ export function CabinetShell({ title, headerLeft, headerRight, children }: Cabin
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-white/50 hover:bg-white/[0.06] hover:text-white transition-colors"
           >
-            <IconHamburger />
+            <Menu size={16} strokeWidth={1.5} />
           </button>
         </div>
 
@@ -173,10 +179,8 @@ export function CabinetShell({ title, headerLeft, headerRight, children }: Cabin
                             </span>
                           )}
                           {item.expandable && (
-                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"
-                              className={`opacity-40 transition-transform duration-fast ${isExpanded ? 'rotate-180' : ''}`}>
-                              <path d="M2.5 4l2.5 2.5L7.5 4" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
+                            <ChevronDown size={10} strokeWidth={1.5} aria-hidden="true"
+                              className={`opacity-40 transition-transform duration-fast ${isExpanded ? 'rotate-180' : ''}`} />
                           )}
                         </>
                       )}
@@ -270,7 +274,7 @@ export function CabinetShell({ title, headerLeft, headerRight, children }: Cabin
                 onClick={() => setNotifOpen((o) => !o)}
                 className="relative flex h-9 w-9 items-center justify-center rounded-full text-muted hover:bg-bg-surface"
               >
-                <IconBell />
+                <Bell size={18} strokeWidth={1.5} />
                 {unreadIds.size > 0 && (
                   <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />
                 )}
@@ -358,7 +362,7 @@ export function CabinetShell({ title, headerLeft, headerRight, children }: Cabin
                     onClick={() => { setUserMenuOpen(false); setSettingsOpen(true); }}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-[13px] text-ink hover:bg-bg-surface"
                   >
-                    <IconSettingsSmall /> Settings
+                    <Settings size={14} strokeWidth={1.5} /> Settings
                   </button>
                   <button
                     type="button"
@@ -370,7 +374,7 @@ export function CabinetShell({ title, headerLeft, headerRight, children }: Cabin
                     }}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-[13px] text-error hover:bg-bg-surface"
                   >
-                    <IconLogout /> Log out
+                    <LogOut size={14} strokeWidth={1.5} /> Log out
                   </button>
                 </div>
               )}
@@ -435,7 +439,7 @@ function SettingsModal({ currentName, onClose, onSave }: {
           <h2 className="font-brand text-[15px] font-semibold text-ink">Account settings</h2>
           <button type="button" onClick={onClose} aria-label="Close"
             className="flex h-7 w-7 items-center justify-center rounded-full text-muted hover:bg-bg-surface">
-            <IconClose />
+            <X size={14} strokeWidth={1.5} />
           </button>
         </div>
         <div className="space-y-4 px-6 py-5">
@@ -470,41 +474,11 @@ function SettingsModal({ currentName, onClose, onSave }: {
   );
 }
 
-function IconSettingsSmall(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="7" cy="7" r="2"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M3 3l1 1M10 10l1 1M3 11l1-1M10 4l1-1"/></svg>;
-}
-function IconLogout(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12H2a1 1 0 01-1-1V3a1 1 0 011-1h3M9 10l3-3-3-3M12 7H5"/></svg>;
-}
-function IconClose(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>;
-}
-function NavIcon({ d }: { d: string }): JSX.Element {
-  return <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
-}
-function NavIconPath({ d }: { d: string }): JSX.Element {
-  return <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
-}
 function AbleglyGlyph(): JSX.Element {
   return (
     <svg width="18" height="22" viewBox="0 0 28 41" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M26.6175 34.8035C25.6641 35.7569 24.3464 36.347 22.891 36.346C22.0266 36.346 21.2118 36.1381 20.4915 35.7691C19.5063 35.2642 18.7008 34.4588 18.1961 33.4736C17.829 32.7534 17.621 31.9396 17.621 31.0761V30.9384C17.6333 30.442 17.7147 29.9625 17.8552 29.5111C17.8552 29.5092 17.8561 29.5074 17.8552 29.5064C18.1081 28.6869 18.2438 27.8159 18.2448 26.9132C18.2448 25.7612 18.0228 24.6607 17.6201 23.6512C17.1734 22.5292 16.5019 21.5214 15.6627 20.6814C14.8236 19.8413 13.815 19.1698 12.6929 18.724C11.6833 18.3213 10.5829 18.1003 9.43098 18.0993C8.52816 18.0993 7.65718 18.2361 6.8377 18.489H6.83302C6.38161 18.6295 5.90303 18.7109 5.40572 18.7231H5.26805C4.4055 18.7231 3.5907 18.5161 2.8705 18.148C1.88526 17.6432 1.07983 16.8378 0.575037 15.8525C0.207912 15.1352 0 14.3204 0 13.455C0 11.9996 0.589085 10.6819 1.54249 9.72852C2.49589 8.77512 3.81454 8.18604 5.26899 8.18604H27.9727C28.0757 8.18604 28.16 8.27032 28.16 8.37334V31.077C28.16 32.5324 27.5709 33.8501 26.6165 34.8044L26.6175 34.8035Z" fill="#2BFF99"/>
       <path d="M9.61833 31.904C12.5118 31.904 14.8574 29.5585 14.8574 26.665C14.8574 23.7715 12.5118 21.4259 9.61833 21.4259C6.7249 21.4259 4.37926 23.7716 4.37926 26.665C4.37926 29.5583 6.72487 31.904 9.61833 31.904Z" fill="#2BFF99"/>
-    </svg>
-  );
-}
-function IconHamburger(): JSX.Element {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M2 4h12M2 8h12M2 12h12" />
-    </svg>
-  );
-}
-function IconBell(): JSX.Element {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M4.5 7.5a4.5 4.5 0 119 0v3l1.5 2h-12l1.5-2v-3z" strokeLinejoin="round" />
-      <path d="M7.5 14.5a1.5 1.5 0 003 0" strokeLinecap="round" />
     </svg>
   );
 }

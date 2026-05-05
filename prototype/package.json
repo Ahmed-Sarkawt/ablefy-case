@@ -21,6 +21,7 @@
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.5.0",
     "hono": "^4.6.0",
+    "lucide-react": "^1.14.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",

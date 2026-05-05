@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, CabinetShell } from '../components';
 import { useRequireAuth, getUserId } from '../lib/auth';
+import { Filter, Search, Download, Plus, Share2, Check, MoreHorizontal, Pencil, Eye, EyeOff, Copy, Archive, Package } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -78,7 +79,7 @@ export default function ProductsList(): JSX.Element {
             type="button"
             className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-2 text-[13px] font-medium text-ink hover:bg-bg-surface"
           >
-            <IconFilter /> Filter
+            <Filter size={14} strokeWidth={1.5} /> Filter
           </button>
           <button
             type="button"
@@ -91,7 +92,7 @@ export default function ProductsList(): JSX.Element {
         <div className="flex items-center gap-2">
           <div className="relative">
             <span className="absolute inset-y-0 left-3 flex items-center text-muted">
-              <IconSearch />
+              <Search size={14} strokeWidth={1.5} />
             </span>
             <input
               type="search"
@@ -105,7 +106,7 @@ export default function ProductsList(): JSX.Element {
             type="button"
             className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-2 text-[13px] font-medium text-ink hover:bg-bg-surface"
           >
-            <IconDownload /> CSV
+            <Download size={14} strokeWidth={1.5} /> CSV
           </button>
           <Button
             variant="primary"
@@ -114,7 +115,7 @@ export default function ProductsList(): JSX.Element {
             aria-label="Create product"
             className="!rounded-xl"
           >
-            <IconPlus />
+            <Plus size={14} strokeWidth={2} />
           </Button>
         </div>
       </div>
@@ -268,7 +269,7 @@ function ProductRow({
           onClick={(e) => { e.stopPropagation(); onShare(); }}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-2.5 py-1.5 text-[11px] font-medium text-ink transition-colors hover:bg-bg-surface"
         >
-          {copied ? <IconCheck /> : <IconShare />}
+          {copied ? <Check size={13} strokeWidth={2} /> : <Share2 size={13} strokeWidth={1.5} />}
           {copied ? 'Copied!' : 'Share'}
         </button>
       </td>
@@ -283,7 +284,7 @@ function ProductRow({
             aria-label="More actions"
             className="flex h-7 w-7 items-center justify-center rounded-full text-muted transition-colors hover:bg-bg-canvas hover:text-ink"
           >
-            <IconDots />
+            <MoreHorizontal size={16} strokeWidth={1.5} />
           </button>
           {menuOpen && menuCoords && (
             <div
@@ -291,11 +292,11 @@ function ProductRow({
               className="min-w-[160px] overflow-hidden rounded-xl border border-border bg-bg-card shadow-med"
             >
               {[
-                { label: 'Open', icon: <IconEdit />, action: onRowClick },
-                { label: 'Preview', icon: <IconEye />, action: () => {} },
-                { label: 'Duplicate', icon: <IconCopy />, action: () => {} },
-                { label: 'Unpublish', icon: <IconEyeOff />, action: () => {} },
-                { label: 'Archive', icon: <IconArchive />, action: () => {} },
+                { label: 'Open', icon: <Pencil size={14} strokeWidth={1.5} />, action: onRowClick },
+                { label: 'Preview', icon: <Eye size={14} strokeWidth={1.5} />, action: () => {} },
+                { label: 'Duplicate', icon: <Copy size={14} strokeWidth={1.5} />, action: () => {} },
+                { label: 'Unpublish', icon: <EyeOff size={14} strokeWidth={1.5} />, action: () => {} },
+                { label: 'Archive', icon: <Archive size={14} strokeWidth={1.5} />, action: () => {} },
               ].map(({ label, icon, action }) => (
                 <button
                   key={label}
@@ -338,7 +339,7 @@ function EmptyState({ onCreate, searched }: { onCreate: () => void; searched: bo
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
       <span className="flex h-14 w-14 items-center justify-center rounded-full bg-bg-surface text-muted">
-        <IconBox />
+        <Package size={28} strokeWidth={1.5} />
       </span>
       <p className="font-medium text-ink">
         {searched ? 'No products match your search.' : 'No products yet.'}
@@ -352,43 +353,3 @@ function EmptyState({ onCreate, searched }: { onCreate: () => void; searched: bo
   );
 }
 
-/* ── Icons ── */
-function IconFilter(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 2.5h12M3 7h8M5.5 11.5h3" strokeLinecap="round"/></svg>;
-}
-function IconSearch(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="6" cy="6" r="4"/><path d="M10 10l3 3" strokeLinecap="round"/></svg>;
-}
-function IconDownload(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M7 2v7M4 6l3 3 3-3M2 12h10" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-}
-function IconPlus(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 2v10M2 7h10" strokeLinecap="round"/></svg>;
-}
-function IconShare(): JSX.Element {
-  return <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="10.5" cy="2.5" r="1.5"/><circle cx="10.5" cy="10.5" r="1.5"/><circle cx="2.5" cy="6.5" r="1.5"/><path d="M4 6.5l5-3.5M4 6.5l5 3.5" strokeLinecap="round"/></svg>;
-}
-function IconCheck(): JSX.Element {
-  return <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 7l3 3 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-}
-function IconDots(): JSX.Element {
-  return <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="4" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="12" cy="8" r="1.5"/></svg>;
-}
-function IconEdit(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" strokeLinejoin="round"/></svg>;
-}
-function IconEye(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 7c1.5-3 3.5-4.5 6-4.5S11.5 4 13 7c-1.5 3-3.5 4.5-6 4.5S2.5 10 1 7z"/><circle cx="7" cy="7" r="1.5"/></svg>;
-}
-function IconEyeOff(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 2l10 10M5.5 5.7A2 2 0 009.3 9M1 7c.7-1.4 1.6-2.4 2.8-3.1M7 2.5c2.4 0 4.4 1.5 6 4.5-.6 1.2-1.3 2.2-2.3 3" strokeLinecap="round"/></svg>;
-}
-function IconCopy(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="4" y="4" width="8" height="9" rx="1.5"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h1" strokeLinecap="round"/></svg>;
-}
-function IconArchive(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="2.5" width="12" height="2.5" rx="1"/><path d="M2 5v6.5a1 1 0 001 1h8a1 1 0 001-1V5M5.5 8h3" strokeLinecap="round"/></svg>;
-}
-function IconBox(): JSX.Element {
-  return <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="22" height="22" rx="4"/><path d="M8 14h12M14 8v12" strokeLinecap="round"/></svg>;
-}

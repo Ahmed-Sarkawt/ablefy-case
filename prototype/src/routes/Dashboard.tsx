@@ -6,6 +6,7 @@
  */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Megaphone, Users, BarChart2, CheckCircle, TrendingUp } from 'lucide-react';
 import { Card, Button, CabinetShell, SetupSteps } from '../components';
 import { useRequireAuth, getUserId, getUserName } from '../lib/auth';
 import { apiPost } from '../lib/api';
@@ -14,9 +15,9 @@ import { REVEAL_CLASS, staggerAttr } from '../lib/motion';
 interface Shortcut { label: string; description: string; icon: JSX.Element; to: string }
 
 const SHORTCUTS: Shortcut[] = [
-  { label: 'Market & Sell',  description: 'Funnels and promotions', icon: <IconMegaphone />, to: '/products' },
-  { label: 'Customers',      description: 'Manage your buyers',     icon: <IconUsers />,     to: '/products' },
-  { label: 'Analytics',      description: 'Sales and conversions',  icon: <IconBarChart />,  to: '/products' },
+  { label: 'Market & Sell',  description: 'Funnels and promotions', icon: <Megaphone size={18} strokeWidth={1.5} />, to: '/products' },
+  { label: 'Customers',      description: 'Manage your buyers',     icon: <Users size={18} strokeWidth={1.5} />,     to: '/products' },
+  { label: 'Analytics',      description: 'Sales and conversions',  icon: <BarChart2 size={18} strokeWidth={1.5} />, to: '/products' },
 ];
 
 const PRODUCT_UPDATES = [
@@ -272,7 +273,7 @@ export default function Dashboard(): JSX.Element {
               </h2>
               <p className="mt-1 font-brand text-3xl font-semibold text-ink">3.2%</p>
               <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary-active">
-                <IconTrendUp /> +0.4% this month
+                <TrendingUp size={12} strokeWidth={1.5} /> +0.4% this month
               </span>
               <p className="mt-1 text-xs text-muted">42 sales · 30 days</p>
             </div>
@@ -577,7 +578,7 @@ function OnboardingModal({
         {step === 'add-content' && (
           <div className="p-8 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/20">
-              <IconCheckCircle />
+              <CheckCircle size={28} strokeWidth={1.5} color="var(--color-primary-active)" />
             </div>
             <h2 className="mt-4 font-brand text-xl font-semibold text-ink">Product created!</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -649,28 +650,3 @@ function CommunityGraphic(): JSX.Element {
   );
 }
 
-function IconCheckCircle(): JSX.Element {
-  return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--color-primary-active)" strokeWidth="2">
-      <circle cx="14" cy="14" r="12" />
-      <path d="M8.5 14l4 4 7-8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function IconMegaphone(): JSX.Element {
-  return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 7H1v4h2m0-4v4m0-4l10-5v14L3 11m0-4v4" strokeLinejoin="round"/><path d="M15 9h2M14.5 4.5l1.2-1.2M14.5 13.5l1.2 1.2" strokeLinecap="round"/></svg>;
-}
-function IconUsers(): JSX.Element {
-  return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="7" cy="6" r="2.5"/><path d="M2 15c.6-3 2.5-4.5 5-4.5s4.4 1.5 5 4.5"/><circle cx="13" cy="6" r="2"/><path d="M15.5 14c-.4-2-1.8-3-3.5-3"/></svg>;
-}
-function IconBarChart(): JSX.Element {
-  return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="10" width="3" height="6" rx="1"/><rect x="7.5" y="6" width="3" height="10" rx="1"/><rect x="13" y="3" width="3" height="13" rx="1"/></svg>;
-}
-function IconTrendUp(): JSX.Element {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M1 9l3.5-3.5L7 8l4-5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}

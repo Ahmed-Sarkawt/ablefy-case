@@ -9,6 +9,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, CabinetShell } from '../components';
 import { useRequireAuth } from '../lib/auth';
+import { BookOpen } from 'lucide-react';
 
 export default function ProductsContentPlaceholder(): JSX.Element {
   useRequireAuth();
@@ -23,19 +24,7 @@ export default function ProductsContentPlaceholder(): JSX.Element {
           className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-bg-surface"
           aria-hidden="true"
         >
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--color-muted)"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="3" />
-            <path d="M9 8h6M9 12h6M9 16h4" />
-          </svg>
+          <BookOpen size={32} strokeWidth={1.75} color="var(--color-muted)" />
         </div>
 
         <h1 className="font-brand text-xl font-semibold text-ink">

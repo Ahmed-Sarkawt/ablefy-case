@@ -8,6 +8,7 @@
  */
 import { forwardRef, useId } from 'react';
 import type { InputHTMLAttributes, ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -72,21 +73,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           role="alert"
           className="flex items-center gap-1 text-xs font-medium text-error"
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            aria-hidden="true"
-            className="flex-shrink-0"
-          >
-            <circle cx="6" cy="6" r="5.5" stroke="currentColor" fill="none" />
-            <path
-              d="M6 3.5v3M6 8v0.5"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="1.5"
-            />
-          </svg>
+          <AlertCircle size={12} strokeWidth={1.5} aria-hidden="true" className="flex-shrink-0" />
           {error}
         </p>
       ) : null}

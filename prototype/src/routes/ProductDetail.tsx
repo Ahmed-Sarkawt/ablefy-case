@@ -17,6 +17,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { CabinetShell } from '../components';
 import { useRequireAuth } from '../lib/auth';
+import {
+  ArrowLeft, ChevronDown, ChevronRight, MoreHorizontal, Pen, Settings,
+  FilePlus, FileText, Plus, Check, Copy, ExternalLink, Image, Globe,
+  CreditCard, Sparkles, Store, KeyRound, Code2,
+} from 'lucide-react';
 
 interface ProductData {
   id: string;
@@ -98,7 +103,7 @@ export default function ProductDetail(): JSX.Element {
           to="/products"
           className="hidden items-center gap-1.5 rounded-lg px-2 py-1 text-[13px] text-muted transition-colors hover:bg-bg-surface hover:text-ink lg:flex"
         >
-          <IconBack /> Back
+          <ArrowLeft size={14} strokeWidth={1.5} /> Back
         </Link>
       }
     >
@@ -140,7 +145,7 @@ export default function ProductDetail(): JSX.Element {
                 >
                   {isPublished && <span className="h-1.5 w-1.5 rounded-full bg-primary-active" />}
                   {isPublished ? 'Published' : 'Draft'}
-                  <IconChevronDown />
+                  <ChevronDown size={12} strokeWidth={1.5} />
                 </button>
 
                 {/* … menu */}
@@ -150,7 +155,7 @@ export default function ProductDetail(): JSX.Element {
                     onClick={() => setDotMenuOpen((o) => !o)}
                     className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-bg-surface"
                   >
-                    <IconDots />
+                    <MoreHorizontal size={16} strokeWidth={1.5} />
                   </button>
                   {dotMenuOpen && (
                     <div className="absolute right-0 top-10 z-50 min-w-[160px] overflow-hidden rounded-xl border border-border bg-bg-card shadow-med">
@@ -281,7 +286,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
         /* Empty state */
         <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border bg-bg-card py-20 text-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-bg-surface text-muted">
-            <IconFilePlus />
+            <FilePlus size={28} strokeWidth={1.5} />
           </div>
           <div>
             <p className="font-semibold text-ink">No modules yet</p>
@@ -292,7 +297,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
             onClick={() => setAddingModule(true)}
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-[13px] font-semibold text-sidebar transition-colors hover:bg-primary-hover"
           >
-            <IconPlus /> Add item
+            <Plus size={12} strokeWidth={2} /> Add item
           </button>
         </div>
       ) : isEmpty && addingModule ? (
@@ -339,7 +344,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
                       onClick={() => setExpandedId(expandedId === mod.id ? null : mod.id)}
                       className="flex w-full items-center gap-2 px-4 py-3 text-left text-[13px] font-semibold text-ink transition-colors hover:bg-bg-surface"
                     >
-                      <IconChevronRight className={`flex-shrink-0 transition-transform duration-fast ${expandedId === mod.id ? 'rotate-90' : ''}`} />
+                      <ChevronRight size={12} strokeWidth={1.5} className={`flex-shrink-0 transition-transform duration-fast ${expandedId === mod.id ? 'rotate-90' : ''}`} />
                       {mod.title}
                     </button>
                     {expandedId === mod.id && (
@@ -351,7 +356,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
                               onClick={() => setSelectedLesson(lesson)}
                               className={`flex w-full items-center gap-2 border-t border-border px-6 py-2.5 text-left text-[13px] transition-colors hover:bg-bg-surface ${selectedLesson?.id === lesson.id ? 'bg-bg-surface font-medium text-ink' : 'text-muted'}`}
                             >
-                              <IconFileText />
+                              <FileText size={13} strokeWidth={1.25} />
                               {lesson.title}
                             </button>
                           </li>
@@ -412,7 +417,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
               ) : (
                 <div className="border-t border-border p-4">
                   <button type="button" onClick={() => setAddingModule(true)} className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[12px] font-semibold text-sidebar hover:bg-primary-hover">
-                    <IconPlus /> Add item
+                    <Plus size={12} strokeWidth={2} /> Add item
                   </button>
                 </div>
               )}
@@ -437,7 +442,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
                     ))}
                   </div>
                   <div className="mt-6 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border py-14 text-center text-muted">
-                    <IconFilePlus />
+                    <FilePlus size={24} strokeWidth={1.5} />
                     <p className="text-sm">Drag files here or</p>
                     <button type="button" className="rounded-full border border-border bg-bg-card px-4 py-2 text-[13px] font-medium text-ink hover:bg-bg-surface">
                       Browse files
@@ -458,7 +463,7 @@ function ContentTab({ productId }: { productId: string }): JSX.Element {
                 </div>
               ) : (
                 <div className="flex h-full flex-col items-center justify-center gap-2 text-muted">
-                  <IconFileText />
+                  <FileText size={24} strokeWidth={1.5} />
                   <p className="text-sm">Select a lesson to edit its content.</p>
                 </div>
               )}
@@ -633,7 +638,7 @@ function ProductDetailsTab({ product }: { product: ProductData }): JSX.Element {
             {coverUrl ? (
               <img src={coverUrl} alt="" className="h-32 w-full object-cover" />
             ) : (
-              <div className="flex h-32 items-center justify-center bg-bg-surface text-muted"><IconImage /></div>
+              <div className="flex h-32 items-center justify-center bg-bg-surface text-muted"><Image size={22} strokeWidth={1.5} /></div>
             )}
             <div className="p-4">
               <p className="font-brand text-sm font-semibold text-ink">{name || 'Product name'}</p>
@@ -654,12 +659,12 @@ function ProductDetailsTab({ product }: { product: ProductData }): JSX.Element {
 /* ─── Pages Tab ─── */
 
 const PAGE_CARDS = [
-  { id: 'product',  title: 'Product page',   category: 'Sales',  desc: 'Public landing page for your product.',        icon: <IconGlobe /> },
-  { id: 'checkout', title: 'Checkout page',  category: 'Sales',  desc: 'Secure payment checkout.',                     icon: <IconCreditCard /> },
-  { id: 'thankyou', title: 'Thank you page', category: 'Sales',  desc: 'Post-purchase confirmation page.',             icon: <IconSparkle /> },
-  { id: 'shop',     title: 'Shop page',      category: 'Sales',  desc: 'Your full shop with all published products.',  icon: <IconShop /> },
-  { id: 'login',    title: 'Login link',     category: 'Access', desc: 'Direct link for students to log in.',         icon: <IconKey /> },
-  { id: 'embed',    title: 'Embed code',     category: 'Access', desc: 'Embed checkout or buy button anywhere.',       icon: <IconCode /> },
+  { id: 'product',  title: 'Product page',   category: 'Sales',  desc: 'Public landing page for your product.',        icon: <Globe size={12} strokeWidth={1.25} /> },
+  { id: 'checkout', title: 'Checkout page',  category: 'Sales',  desc: 'Secure payment checkout.',                     icon: <CreditCard size={12} strokeWidth={1.25} /> },
+  { id: 'thankyou', title: 'Thank you page', category: 'Sales',  desc: 'Post-purchase confirmation page.',             icon: <Sparkles size={12} strokeWidth={1.25} /> },
+  { id: 'shop',     title: 'Shop page',      category: 'Sales',  desc: 'Your full shop with all published products.',  icon: <Store size={12} strokeWidth={1.25} /> },
+  { id: 'login',    title: 'Login link',     category: 'Access', desc: 'Direct link for students to log in.',         icon: <KeyRound size={12} strokeWidth={1.25} /> },
+  { id: 'embed',    title: 'Embed code',     category: 'Access', desc: 'Embed checkout or buy button anywhere.',       icon: <Code2 size={12} strokeWidth={1.25} /> },
 ] as const;
 
 function PagesTab({ productId, productName }: { productId: string; productName: string }): JSX.Element {
@@ -746,15 +751,15 @@ function PageCard({ card, productName, copied, onCopy }: {
         <div className="mt-3 flex gap-2">
           <button type="button" onClick={onCopy} aria-label="Copy link"
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted hover:border-primary/30 hover:text-primary-active">
-            {copied ? <IconCheck /> : <IconCopySmall />}
+            {copied ? <Check size={12} strokeWidth={2} /> : <Copy size={12} strokeWidth={1.25} />}
           </button>
           <button type="button" aria-label="Open page"
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted hover:border-primary/30 hover:text-primary-active">
-            <IconExternalLink />
+            <ExternalLink size={12} strokeWidth={1.25} />
           </button>
           <button type="button" aria-label="Edit page"
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted hover:border-primary/30 hover:text-primary-active">
-            <IconPen />
+            <Pen size={12} strokeWidth={1.25} />
           </button>
         </div>
       </div>
@@ -767,7 +772,7 @@ function PageCard({ card, productName, copied, onCopy }: {
 function StubTab({ title, description }: { title: string; description: string }): JSX.Element {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-bg-surface text-muted"><IconSettings /></span>
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-bg-surface text-muted"><Settings size={20} strokeWidth={1.25} /></span>
       <p className="font-semibold text-ink">{title}</p>
       <p className="max-w-sm text-sm text-muted">{description}</p>
       <span className="rounded-full border border-dashed border-border px-3 py-1 text-[11px] text-muted">Coming in full version</span>
@@ -811,61 +816,3 @@ function ProductAvatar({ url, name }: { url: string | null; name: string }): JSX
   );
 }
 
-/* ─── Icons ─── */
-function IconBack(): JSX.Element {
-  return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 2L4 7l5 5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-}
-function IconChevronDown(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" strokeLinecap="round"/></svg>;
-}
-function IconChevronRight({ className }: { className?: string }): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}><path d="M4.5 2.5l4 3.5-4 3.5" strokeLinecap="round"/></svg>;
-}
-function IconDots(): JSX.Element {
-  return <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="4" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="12" cy="8" r="1.5"/></svg>;
-}
-function IconPen(): JSX.Element {
-  return <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M8 2l3 3-7 7H1V9l7-7z" strokeLinejoin="round"/></svg>;
-}
-function IconSettings(): JSX.Element {
-  return <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.25"><circle cx="6.5" cy="6.5" r="2"/><path d="M6.5 1v1.5M6.5 10v1.5M1 6.5h1.5M10 6.5h1.5" strokeLinecap="round"/></svg>;
-}
-function IconFilePlus(): JSX.Element {
-  return <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 2H7a2 2 0 00-2 2v20a2 2 0 002 2h14a2 2 0 002-2V10l-7-8z"/><path d="M16 2v8h6M14 17v-5M11.5 14.5h5" strokeLinecap="round"/></svg>;
-}
-function IconFileText(): JSX.Element {
-  return <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M7.5 1H3a1 1 0 00-1 1v9a1 1 0 001 1h7a1 1 0 001-1V5.5L7.5 1z" strokeLinejoin="round"/><path d="M7.5 1v4.5H12M4 7h5M4 9.5h3" strokeLinecap="round"/></svg>;
-}
-function IconPlus(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2v8M2 6h8" strokeLinecap="round"/></svg>;
-}
-function IconCheck(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 6l3 3 5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-}
-function IconCopySmall(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.25"/><path d="M8.5 3.5V2.5a1 1 0 00-1-1H2a1 1 0 00-1 1v6a1 1 0 001 1h1" strokeLinecap="round"/></svg>;
-}
-function IconExternalLink(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M6.5 1H11v4.5M11 1L5 7M4.5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V8" strokeLinecap="round"/></svg>;
-}
-function IconImage(): JSX.Element {
-  return <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="2" width="18" height="18" rx="3"/><circle cx="7.5" cy="7.5" r="1.5"/><path d="M2 15l5-5 4 4 2-2 4 4" strokeLinecap="round"/></svg>;
-}
-function IconGlobe(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><circle cx="6" cy="6" r="5"/><path d="M1 6h10M6 1c-1.5 2-2 3-2 5s.5 3 2 5M6 1c1.5 2 2 3 2 5s-.5 3-2 5"/></svg>;
-}
-function IconCreditCard(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><rect x="1" y="2.5" width="10" height="7" rx="1.25"/><path d="M1 5.5h10M3.5 8h2" strokeLinecap="round"/></svg>;
-}
-function IconSparkle(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M6 1v10M1 6h10M2.8 2.8l6.4 6.4M9.2 2.8L2.8 9.2" strokeLinecap="round" opacity=".35"/><circle cx="6" cy="6" r="2"/></svg>;
-}
-function IconShop(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M1 3h10l-1 4H2L1 3z"/><path d="M3.5 10V7M6 10V7M8.5 10V7" strokeLinecap="round"/></svg>;
-}
-function IconKey(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><circle cx="4.5" cy="4.5" r="2.5"/><path d="M6.5 6.5l4 4M8.5 8.5L10 7" strokeLinecap="round"/></svg>;
-}
-function IconCode(): JSX.Element {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M4 3L1 6l3 3M8 3l3 3-3 3M6.5 1.5l-1 9" strokeLinecap="round"/></svg>;
-}
