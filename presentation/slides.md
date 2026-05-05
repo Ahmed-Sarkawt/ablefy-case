@@ -3,6 +3,7 @@ marp: true
 theme: default
 class: lead
 paginate: true
+html: true
 backgroundColor: '#fafafc'
 color: '#21282e'
 style: |
@@ -266,6 +267,24 @@ AI chatbot replaces the form. AI generates a ready course. Alex edits.
 3. Does ablefy have LLM infrastructure for the chatbot?
 4. Is the page builder a hard dependency or replaceable?
 5. Is foroom integration on the 2026 roadmap?
+
+---
+
+## Tech stack
+
+| Layer | Tech |
+|-------|------|
+| Frontend | React 18 · TypeScript · Vite · Tailwind CSS |
+| Backend | Hono · Node.js · better-sqlite3 (SQLite) |
+| Auth | HTTP-only cookies · bcrypt |
+| Deploy | Railway — RAILPACK builder |
+| Tests | Vitest · Playwright |
+
+<br>
+
+<a href="https://ablefy-case-ahmedsulaiman.up.railway.app/dashboard" target="_blank" style="display:inline-block;background:#05ab5b;color:#fff;font-weight:700;padding:14px 32px;border-radius:99px;text-decoration:none;font-size:1rem;letter-spacing:0.01em;">
+  Try the live prototype →
+</a>
 
 ---
 
