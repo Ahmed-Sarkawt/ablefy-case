@@ -242,31 +242,40 @@
     .nav {
       position: fixed; bottom: 0; left: 0; right: 0; height: 54px;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 28px;
-      background: rgba(33,40,46,0.95);
+      padding: 0 20px; gap: 12px;
+      background: rgba(33,40,46,0.97);
       backdrop-filter: blur(16px);
       border-top: 1px solid rgba(255,255,255,0.07);
       z-index: 100;
     }
-    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .nav-left  { display: flex; align-items: center; flex-shrink: 0; }
+    .nav-center { flex: 1; display: flex; align-items: center; justify-content: center; min-width: 0; }
+    .nav-right  { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .nav-title { font-size: 0.72rem; font-weight: 500; color: rgba(255,255,255,0.3); white-space: nowrap; }
-    .nav-counter { font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 500; min-width: 48px; }
+    .nav-counter { font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 500; white-space: nowrap; }
+    .nav-section-label {
+      display: none;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .nav-btns { display: flex; gap: 6px; }
     .nav-btn {
-      width: 34px; height: 34px; border-radius: 7px;
-      background: rgba(255,255,255,0.07); border: none;
-      color: rgba(255,255,255,0.6); font-size: 0.9rem; cursor: pointer;
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(255,255,255,0.08); border: none;
+      color: rgba(255,255,255,0.6); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, color 0.15s;
+      touch-action: manipulation;
     }
-    .nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.14); color: white; }
-    .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-    .nav-hint { font-size: 0.65rem; color: rgba(255,255,255,0.2); }
+    .nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.16); color: white; }
+    .nav-btn:active:not(:disabled) { background: rgba(23,223,135,0.2); color: var(--green); }
+    .nav-btn:disabled { opacity: 0.22; cursor: not-allowed; }
     .nav-dots { display: flex; gap: 5px; align-items: center; }
     .nav-dot {
       width: 5px; height: 5px; border-radius: 50%;
       background: rgba(255,255,255,0.2);
-      transition: background 0.2s, transform 0.2s, width 0.2s, border-radius 0.2s;
+      transition: background 0.2s, width 0.2s, border-radius 0.2s;
     }
     .nav-dot.active { background: var(--green); width: 15px; border-radius: 5px; }
 
@@ -316,40 +325,38 @@
       .process-grid { grid-template-columns: 1fr 1fr; }
       .quote-grid   { grid-template-columns: 1fr 1fr; }
       .card-grid    { grid-template-columns: 1fr 1fr !important; }
-      /* Intro: shrink fixed photo column */
       .slide[data-index="intro"] > div { grid-template-columns: 1fr 280px !important; }
     }
 
     /* ─ Tablet portrait ≤768px ─ */
     @media (max-width: 768px) {
-      .slide { padding: 32px 24px 24px; }
+      .slide { padding: 28px 20px 20px; }
+      /* Allow content to scroll vertically within active slide */
+      .slide.active { overflow-y: auto; -webkit-overflow-scrolling: touch; }
       h1 { font-size: clamp(1.8rem, 6vw, 3rem); }
-      h2 { font-size: clamp(1.1rem, 3.5vw, 1.6rem); margin-bottom: 16px; }
+      h2 { font-size: clamp(1.15rem, 3.5vw, 1.6rem); margin-bottom: 14px; }
+
+      /* Progress bar thicker (Weber's Law — 2px is imperceptible) */
+      .progress { height: 3px; }
 
       /* CSS-class grids → single column */
-      .cols-2, .cols-65-35 { grid-template-columns: 1fr !important; gap: 16px; }
-      .quote-grid, .process-grid { grid-template-columns: 1fr; }
+      .cols-2, .cols-65-35 { grid-template-columns: 1fr !important; gap: 14px; }
+      .quote-grid, .process-grid { grid-template-columns: 1fr; gap: 10px; }
       .card-grid { grid-template-columns: 1fr 1fr !important; }
 
-      /* Comparison: stack vertically */
+      /* Comparison: stack */
       .compare { grid-template-columns: 1fr !important; }
       .compare-divider { display: none; }
 
       /* TOC: single column */
       .toc-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
 
-      /* Intro slide: hide photo column, full-width text */
-      .slide[data-index="intro"] > div {
-        grid-template-columns: 1fr !important;
-        height: 100% !important;
-      }
+      /* Intro: hide photo, text fills full width */
+      .slide[data-index="intro"] > div { grid-template-columns: 1fr !important; }
       .slide[data-index="intro"] > div > div:last-child { display: none !important; }
-      .slide[data-index="intro"] > div > div:first-child {
-        padding: 36px 28px !important;
-        overflow-y: auto;
-      }
+      .slide[data-index="intro"] > div > div:first-child { padding: 32px 24px !important; }
 
-      /* Tables: horizontal scroll */
+      /* Tables scroll horizontally */
       .slide table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
       /* Stat */
@@ -357,55 +364,65 @@
       .stat-vs  { font-size: 1.1rem; }
 
       /* Steps */
-      .step { gap: 14px; }
-      .step-num { width: 30px; height: 30px; }
+      .step { gap: 12px; }
+      .step-num { width: 30px; height: 30px; font-size: 0.78rem; }
+      .step-body { font-size: 0.8rem; }
 
       /* Cover */
-      .cover-badge { font-size: 0.65rem; padding: 4px 10px; margin-bottom: 20px; }
+      .cover-badge { font-size: 0.62rem; padding: 4px 10px; margin-bottom: 18px; }
       .cover-title { font-size: clamp(1.8rem, 6vw, 3.2rem); }
       .cover-sub   { font-size: 0.85rem; }
-      .cover-meta  { margin-top: 28px; }
+      .cover-meta  { margin-top: 24px; font-size: 0.72rem; }
 
       /* Closing */
       .closing-name { font-size: 1.5rem; }
-      .closing-role { font-size: 0.82rem; }
+      .closing-role { font-size: 0.8rem; }
 
       /* Process cards */
+      .process-card { padding: 14px; }
       .process-card h3 { font-size: 0.75rem; }
-      .process-card p  { font-size: 0.75rem; }
+      .process-card p  { font-size: 0.74rem; }
 
-      /* Nav */
-      .nav { padding: 0 14px; }
+      /* Cards */
+      .card { padding: 16px; }
+
+      /* Nav — hide title, shrink dots */
+      .nav { padding: 0 12px; }
       .nav-title { display: none; }
       .nav-dots { gap: 3px; }
       .nav-dot { width: 4px; height: 4px; }
-      .nav-dot.active { width: 12px; }
+      .nav-dot.active { width: 10px; }
+    }
+
+    /* ─ Mobile ≤600px — swap dots for section label (Hick's Law) ─ */
+    @media (max-width: 600px) {
+      .nav-dots { display: none; }
+      .nav-section-label { display: block; }
+      /* Bigger touch targets (Fitts's Law — 44px minimum) */
+      .nav-btn { width: 44px; height: 44px; border-radius: 50%; }
+      .nav { height: 58px; padding: 0 10px; gap: 8px; }
+      .deck { inset: 0 0 58px 0; }
+      .progress { bottom: 58px; height: 3px; }
     }
 
     /* ─ Mobile ≤480px ─ */
     @media (max-width: 480px) {
       .slide { padding: 20px 16px 16px; }
       h2 { font-size: clamp(1rem, 4vw, 1.3rem); margin-bottom: 10px; }
-      .eyebrow { font-size: 9px; margin-bottom: 8px; }
+      .eyebrow { font-size: 9px; letter-spacing: 0.08em; margin-bottom: 8px; }
+      .sm { font-size: 0.78rem; }
 
-      /* All inline card grids → single column */
       .card-grid { grid-template-columns: 1fr !important; }
+      .stat-big { font-size: clamp(2.6rem, 20vw, 5rem); }
 
-      /* Stat */
-      .stat-big { font-size: clamp(2.8rem, 20vw, 5rem); }
-
-      /* Quote cards */
       .quote-de { font-size: 0.8rem; }
       .quote-en { font-size: 0.7rem; }
 
-      /* Flow diagram */
       .flow-box { min-width: 90px; padding: 10px 12px; }
+      .flow-label { font-size: 0.72rem; }
 
-      /* Nav: bigger touch targets */
-      .nav { padding: 0 10px; height: 50px; }
-      .nav-btn { width: 40px; height: 40px; border-radius: 50%; }
-      .deck { inset: 0 0 50px 0; }
-      .progress { bottom: 50px; }
+      /* Hobby tooltips: show tip text inline on tap (handled via JS) */
+      .hobby::after { font-size: 0.6rem; padding: 3px 8px; }
     }
   </style>
 </head>
@@ -1275,9 +1292,12 @@
   <div class="nav-left">
     <div class="nav-title">ablefy — Onboarding Redesign</div>
   </div>
-  <div class="nav-dots" id="dots"></div>
-  <div style="display:flex; align-items:center; gap:12px;">
-    <div class="nav-counter" id="counter">1 / 22</div>
+  <div class="nav-center">
+    <div class="nav-dots" id="dots"></div>
+    <div class="nav-section-label" id="nav-section" aria-live="polite"></div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-counter" id="counter">1 / 26</div>
     <div class="nav-btns">
       <button class="nav-btn" id="prev-btn" disabled aria-label="Previous slide">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
@@ -1300,7 +1320,7 @@
   const nextBtn  = document.getElementById('next-btn');
   const dotsWrap = document.getElementById('dots');
 
-  // Build dots (max 22 dots, group into sections)
+  // Build dots (grouped by section)
   const SECTIONS = [
     { label: 'Intro',     count: 5 },
     { label: 'Problem',   count: 4 },
@@ -1308,6 +1328,9 @@
     { label: 'Option 02', count: 3 },
     { label: 'Ship it',   count: 4 },
   ];
+
+  // Build a flat map: dot index → section label
+  const dotSection = [];
   let dotEls = [];
   SECTIONS.forEach(sec => {
     for (let i = 0; i < sec.count; i++) {
@@ -1315,17 +1338,19 @@
       d.className = 'nav-dot';
       dotsWrap.appendChild(d);
       dotEls.push(d);
+      dotSection.push(sec.label);
     }
-    // Section spacer
     const sp = document.createElement('div');
-    sp.style.cssText = 'width:1px;height:12px;background:rgba(255,255,255,0.1);margin:0 4px;';
+    sp.style.cssText = 'width:1px;height:12px;background:rgba(255,255,255,0.1);margin:0 4px;flex-shrink:0;';
     dotsWrap.appendChild(sp);
   });
 
+  const navSectionEl = document.getElementById('nav-section');
+
   function updateDots() {
-    dotEls.forEach((d, i) => {
-      d.classList.toggle('active', i === current);
-    });
+    dotEls.forEach((d, i) => d.classList.toggle('active', i === current));
+    // Update section label shown on mobile
+    if (navSectionEl) navSectionEl.textContent = dotSection[current] || '';
   }
 
   function go(index) {
@@ -1375,22 +1400,29 @@
   prevBtn.addEventListener('click', () => go(current - 1));
   nextBtn.addEventListener('click', () => go(current + 1));
 
-  // Click left/right half of screen
+  // Click left/right half of screen — desktop only
   document.getElementById('deck').addEventListener('click', e => {
+    if (window.matchMedia('(pointer: coarse)').matches) return; // skip on touch
     const x = e.clientX / window.innerWidth;
     if (x > 0.55) go(current + 1);
     else if (x < 0.35) go(current - 1);
   });
 
-  // Touch swipe
-  let touchX = null;
-  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  // Direction-aware swipe — only fires when horizontal > vertical (Jakob's Law)
+  let touchStart = null;
+  document.addEventListener('touchstart', e => {
+    touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
   document.addEventListener('touchend', e => {
-    if (touchX === null) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 50) go(dx < 0 ? current + 1 : current - 1);
-    touchX = null;
-  });
+    if (!touchStart) return;
+    const dx = e.changedTouches[0].clientX - touchStart.x;
+    const dy = e.changedTouches[0].clientY - touchStart.y;
+    // Only navigate if predominantly horizontal (avoids firing on scroll)
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.8) {
+      go(dx < 0 ? current + 1 : current - 1);
+    }
+    touchStart = null;
+  }, { passive: true });
 
   // Init
   updateDots();
