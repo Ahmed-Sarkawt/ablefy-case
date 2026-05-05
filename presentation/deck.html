@@ -276,6 +276,106 @@
       background: var(--green); transition: width 0.35s cubic-bezier(0.2,0.8,0.2,1);
       z-index: 101;
     }
+
+    /* ══ Responsive ═══════════════════════════════════════════ */
+
+    /* ─ Tablet landscape ≤1024px ─ */
+    @media (max-width: 1024px) {
+      .slide { padding: 48px 48px 36px; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .quote-grid   { grid-template-columns: 1fr 1fr; }
+      .card-grid    { grid-template-columns: 1fr 1fr !important; }
+      /* Intro: shrink fixed photo column */
+      .slide[data-index="intro"] > div { grid-template-columns: 1fr 280px !important; }
+    }
+
+    /* ─ Tablet portrait ≤768px ─ */
+    @media (max-width: 768px) {
+      .slide { padding: 32px 24px 24px; }
+      h1 { font-size: clamp(1.8rem, 6vw, 3rem); }
+      h2 { font-size: clamp(1.1rem, 3.5vw, 1.6rem); margin-bottom: 16px; }
+
+      /* CSS-class grids → single column */
+      .cols-2, .cols-65-35 { grid-template-columns: 1fr !important; gap: 16px; }
+      .quote-grid, .process-grid { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr 1fr !important; }
+
+      /* Comparison: stack vertically */
+      .compare { grid-template-columns: 1fr !important; }
+      .compare-divider { display: none; }
+
+      /* TOC: single column */
+      .toc-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+
+      /* Intro slide: hide photo column, full-width text */
+      .slide[data-index="intro"] > div {
+        grid-template-columns: 1fr !important;
+        height: 100% !important;
+      }
+      .slide[data-index="intro"] > div > div:last-child { display: none !important; }
+      .slide[data-index="intro"] > div > div:first-child {
+        padding: 36px 28px !important;
+        overflow-y: auto;
+      }
+
+      /* Tables: horizontal scroll */
+      .slide table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+      /* Stat */
+      .stat-big { font-size: clamp(3rem, 16vw, 8rem); }
+      .stat-vs  { font-size: 1.1rem; }
+
+      /* Steps */
+      .step { gap: 14px; }
+      .step-num { width: 30px; height: 30px; }
+
+      /* Cover */
+      .cover-badge { font-size: 0.65rem; padding: 4px 10px; margin-bottom: 20px; }
+      .cover-title { font-size: clamp(1.8rem, 6vw, 3.2rem); }
+      .cover-sub   { font-size: 0.85rem; }
+      .cover-meta  { margin-top: 28px; }
+
+      /* Closing */
+      .closing-name { font-size: 1.5rem; }
+      .closing-role { font-size: 0.82rem; }
+
+      /* Process cards */
+      .process-card h3 { font-size: 0.75rem; }
+      .process-card p  { font-size: 0.75rem; }
+
+      /* Nav */
+      .nav { padding: 0 14px; }
+      .nav-title { display: none; }
+      .nav-dots { gap: 3px; }
+      .nav-dot { width: 4px; height: 4px; }
+      .nav-dot.active { width: 12px; }
+    }
+
+    /* ─ Mobile ≤480px ─ */
+    @media (max-width: 480px) {
+      .slide { padding: 20px 16px 16px; }
+      h2 { font-size: clamp(1rem, 4vw, 1.3rem); margin-bottom: 10px; }
+      .eyebrow { font-size: 9px; margin-bottom: 8px; }
+
+      /* All inline card grids → single column */
+      .card-grid { grid-template-columns: 1fr !important; }
+
+      /* Stat */
+      .stat-big { font-size: clamp(2.8rem, 20vw, 5rem); }
+
+      /* Quote cards */
+      .quote-de { font-size: 0.8rem; }
+      .quote-en { font-size: 0.7rem; }
+
+      /* Flow diagram */
+      .flow-box { min-width: 90px; padding: 10px 12px; }
+
+      /* Nav: bigger touch targets */
+      .nav { padding: 0 10px; height: 50px; }
+      .nav-btn { width: 40px; height: 40px; border-radius: 50%; }
+      .deck { inset: 0 0 50px 0; }
+      .progress { bottom: 50px; }
+    }
   </style>
 </head>
 <body>
@@ -362,7 +462,7 @@
     <h2 style="color:white; margin-bottom:32px;">What we'll cover</h2>
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:0;">
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 48px;">
+      <div class="toc-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px 48px;">
         <!-- Col 1 -->
         <div>
           <div style="display:flex; align-items:baseline; gap:16px; padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.08);">
@@ -819,7 +919,7 @@
   <div class="slide white" data-index="13">
     <div class="eyebrow">Prototype — Key Screens</div>
     <h2>Built with Claude · React + Vite + SQLite</h2>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; flex:1; align-content:start; margin-top:4px;">
+    <div class="card-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; flex:1; align-content:start; margin-top:4px;">
       <div class="card">
         <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/signup</div>
         <div class="sm" style="font-weight:600; margin-bottom:6px;">Signup</div>
@@ -853,7 +953,7 @@
     </div>
     <div style="margin-top:14px;">
       <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;">Claude hooks &amp; sub-agents — active on every edit</div>
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+      <div class="card-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
         <div class="card" style="background:rgba(23,223,135,0.04); border-color:rgba(23,223,135,0.18);">
           <div style="font-size:0.68rem; font-family:monospace; color:var(--green-text); margin-bottom:6px;">PostToolUse · Write/Edit → prototype/src/**</div>
           <div class="sm" style="font-weight:600; margin-bottom:6px;">code-reviewer</div>
