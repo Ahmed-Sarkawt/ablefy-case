@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ablefy — Onboarding Redesign | Ahmed Sarkawt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #17df87;
+      --green-text: #05ab5b;
+      --dark:       #21282e;
+      --darker:     #0d1117;
+      --ink:        #1a1d21;
+      --muted:      #6c757d;
+      --border:     #d7dadf;
+      --surface:    #f3f5f8;
+      --bg:         #fafafc;
+      --white:      #ffffff;
+      --red:        #e53e3e;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: var(--font);
+      background: var(--darker);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Deck container ── */
+    .deck {
+      position: fixed;
+      inset: 0 0 54px 0;
+    }
+
+    /* ── Slide base ── */
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 64px 80px 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .slide.past {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+
+    /* ── Slide themes ── */
+    .light  { background: var(--bg);      color: var(--ink); }
+    .white  { background: var(--white);   color: var(--ink); }
+    .cover  { background: var(--darker);  color: var(--white); }
+    .dark   { background: var(--dark);    color: var(--white); }
+    .tr-green  { background: var(--green);   color: var(--dark); }
+    .tr-dark   { background: var(--darker);  color: var(--white); }
+    .surface-bg { background: var(--surface); color: var(--ink); }
+
+    /* ── Typography ── */
+    .eyebrow {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green-text); margin-bottom: 14px;
+    }
+    .cover .eyebrow, .dark .eyebrow, .tr-dark .eyebrow { color: var(--green); }
+    .tr-green .eyebrow { color: rgba(0,0,0,0.5); }
+
+    h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+    }
+    h2 {
+      font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.015em;
+      margin-bottom: 28px;
+    }
+    .cover h2 { color: var(--white); }
+
+    h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+
+    p { font-size: 0.95rem; line-height: 1.65; }
+    .lg { font-size: 1.1rem; }
+    .sm { font-size: 0.82rem; }
+
+    .muted { color: var(--muted); }
+    .dark .muted, .cover .muted, .tr-dark .muted { color: rgba(255,255,255,0.45); }
+    .green-t { color: var(--green-text); font-weight: 600; }
+    .dark .green-t, .cover .green-t, .tr-dark .green-t { color: var(--green); }
+
+    /* ── Stat slide ── */
+    .stat-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .stat-big { font-size: clamp(6rem, 18vw, 12rem); font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: var(--ink); }
+    .stat-sub { font-size: 1.1rem; color: var(--muted); margin-top: 12px; }
+    .stat-vs { font-size: 1.4rem; font-weight: 700; color: var(--green-text); margin: 8px 0; }
+
+    /* ── Transition slide ── */
+    .tr-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .tr-title { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; }
+    .tr-green .tr-title { color: var(--dark); }
+    .tr-dark .tr-title { color: var(--white); }
+    .tr-tag { display: inline-block; margin-top: 18px; background: rgba(0,0,0,0.12); padding: 6px 16px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; }
+    .tr-dark .tr-tag { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th {
+      text-align: left; padding: 9px 14px; font-weight: 600;
+      font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase;
+      background: var(--surface); border-bottom: 2px solid var(--border);
+    }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    tr:last-child td { border-bottom: none; }
+    .dark th { background: rgba(255,255,255,0.07); border-bottom-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+    .dark td { border-bottom-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+
+    /* ── Tags ── */
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+    .t-pp1 { background: #fef3c7; color: #92400e; }
+    .t-pp2 { background: #dbeafe; color: #1e40af; }
+    .t-red { background: #fee2e2; color: #991b1b; }
+    .t-green { background: rgba(23,223,135,0.15); color: var(--green-text); }
+    .t-neutral { background: var(--surface); color: var(--muted); }
+
+    /* ── Quote cards ── */
+    .quote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; align-content: stretch; }
+    .quote-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px 22px;
+      display: flex; flex-direction: column;
+    }
+    .quote-de { font-size: 0.9rem; font-style: italic; line-height: 1.6; color: var(--ink); margin-bottom: 10px; flex: 1; }
+    .quote-en { font-size: 0.78rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+    .quote-source { font-size: 0.7rem; font-weight: 600; color: var(--green-text); letter-spacing: 0.02em; }
+    .quote-mark { font-size: 2.5rem; line-height: 1; color: var(--green); font-weight: 800; margin-bottom: 6px; }
+
+    /* ── Comparison ── */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .compare-header { padding: 10px 18px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .compare-b .compare-header { background: #fef2f2; color: #b91c1c; border-bottom: 1px solid #fecaca; }
+    .compare-a .compare-header { background: #f0fdf4; color: var(--green-text); border-bottom: 1px solid #bbf7d0; }
+    .compare-b .compare-header::before { content: '✕  '; }
+    .compare-a .compare-header::before { content: '✓  '; }
+    .compare-body { padding: 8px 0; }
+    .compare-row { padding: 9px 18px; font-size: 0.82rem; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-divider { width: 1px; background: var(--border); }
+
+    /* ── Flow diagram ── */
+    .flow { display: flex; align-items: flex-start; gap: 0; overflow-x: auto; }
+    .flow-box {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 14px 16px; min-width: 130px; flex-shrink: 0;
+      text-align: center;
+    }
+    .flow-box.active-box { border-color: var(--green-text); background: rgba(23,223,135,0.05); }
+    .flow-route { font-size: 0.65rem; color: var(--muted); margin-bottom: 5px; font-family: monospace; }
+    .flow-label { font-size: 0.78rem; font-weight: 600; color: var(--ink); line-height: 1.35; }
+    .flow-detail { font-size: 0.68rem; color: var(--muted); margin-top: 5px; line-height: 1.4; }
+    .flow-time { font-size: 0.68rem; color: var(--green-text); margin-top: 6px; font-weight: 600; }
+    .flow-arrow { display: flex; align-items: center; padding: 0 6px; color: var(--border); font-size: 1rem; flex-shrink: 0; margin-top: 22px; }
+
+    /* ── Steps (validation) ── */
+    .steps { display: flex; flex-direction: column; gap: 20px; flex: 1; justify-content: center; }
+    .step { display: flex; gap: 20px; align-items: flex-start; }
+    .step-num {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--green-text); color: white; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; font-weight: 700;
+    }
+    .step-title { font-size: 0.92rem; font-weight: 600; margin-bottom: 4px; }
+    .step-body { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── Track table (recommendation) ── */
+    .track-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .track-row { display: grid; grid-template-columns: 90px 1fr 90px; gap: 0; border-bottom: 1px solid var(--border); }
+    .track-row:last-child { border-bottom: none; }
+    .track-cell { padding: 14px 16px; }
+    .track-row:first-child .track-cell { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); background: var(--surface); padding: 8px 16px; }
+
+    /* ── Blocker number badge ── */
+    .blocker-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; background: var(--green-text);
+      color: white; font-size: 0.68rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── Two-col layout ── */
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+    .cols-65-35 { display: grid; grid-template-columns: 65fr 35fr; gap: 32px; flex: 1; }
+
+    /* ── Card ── */
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+    .dark .card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+    .card + .card { margin-top: 12px; }
+
+    /* ── Cover specifics ── */
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(23,223,135,0.1); border: 1px solid rgba(23,223,135,0.2);
+      border-radius: 6px; padding: 6px 14px;
+      font-size: 0.75rem; font-weight: 600; color: var(--green);
+      letter-spacing: 0.07em; text-transform: uppercase;
+      margin-bottom: 36px; width: fit-content;
+    }
+    .cover-title { font-size: clamp(2.4rem, 5.5vw, 4.2rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+    .cover-sub { font-size: 1rem; color: rgba(255,255,255,0.45); margin-top: 12px; }
+    .cover-meta { margin-top: 48px; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+
+    /* ── Closing slide ── */
+    .closing { flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; }
+    .closing-name { font-size: 2.2rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+    .closing-role { font-size: 0.92rem; color: rgba(255,255,255,0.4); margin-top: 6px; }
+    .closing-email { font-size: 0.92rem; color: var(--green); margin-top: 4px; }
+
+    /* ── Process cards ── */
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 4px; }
+    .process-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 18px; }
+    .process-card h3 { font-size: 0.82rem; color: var(--green); margin-bottom: 8px; }
+    .process-card p { font-size: 0.8rem; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+    .dark hr { border-top-color: rgba(255,255,255,0.1); }
+
+    /* ── Nav bar ── */
+    .nav {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(13,17,23,0.95);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      z-index: 100;
+    }
+    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .nav-title { font-size: 0.72rem; font-weight: 500; color: rgba(255,255,255,0.3); white-space: nowrap; }
+    .nav-counter { font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 500; min-width: 48px; }
+    .nav-btns { display: flex; gap: 6px; }
+    .nav-btn {
+      width: 34px; height: 34px; border-radius: 7px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6); font-size: 0.9rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.14); color: white; }
+    .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    .nav-hint { font-size: 0.65rem; color: rgba(255,255,255,0.2); }
+    .nav-dots { display: flex; gap: 5px; align-items: center; }
+    .nav-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-dot.active { background: var(--green); transform: scale(1.4); }
+
+    /* ── Progress ── */
+    .progress {
+      position: fixed; bottom: 54px; left: 0; height: 2px;
+      background: var(--green); transition: width 0.35s cubic-bezier(0.2,0.8,0.2,1);
+      z-index: 101;
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 1 · Cover -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide cover active" data-index="0">
+    <div class="cover-badge">Product Builder — Case Study</div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; padding-bottom: 20px;">
+      <div class="cover-title">
+        ablefy —<br>Onboarding Redesign
+      </div>
+      <div class="cover-sub">
+        Audit · Prototype · Recommendation
+      </div>
+      <div class="cover-meta">
+        Ahmed Sarkawt &nbsp;·&nbsp; May 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 2 · Alex's Job -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="1">
+    <div class="eyebrow">The Setup</div>
+    <h2>Meet Alex</h2>
+    <div class="cols-2" style="align-items:start; gap:40px;">
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="sm muted" style="margin-bottom:4px;">Who he is</div>
+          <div style="font-size:1rem; font-weight:600; line-height:1.5;">28 years old. AI influencer. 10,000 followers. Deep domain expertise in AI tools.</div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="sm muted" style="margin-bottom:4px;">What he wants</div>
+          <div style="font-size:1rem; font-weight:600; line-height:1.5;">Launch a <span class="green-t">€1,499 AI training course</span> and a paid community.</div>
+        </div>
+        <div class="card">
+          <div class="sm muted" style="margin-bottom:4px;">His timeline</div>
+          <div style="font-size:1rem; font-weight:600; line-height:1.5;"><span class="green-t">10–15 minutes</span> to decide if ablefy is the right tool. Then he moves on.</div>
+        </div>
+      </div>
+      <div>
+        <p class="lg" style="margin-bottom:20px; line-height:1.7;">I walked through the full onboarding as Alex, measuring each step against one question:</p>
+        <blockquote style="border-left: 3px solid var(--green); padding: 16px 20px; background: var(--surface); border-radius: 0 8px 8px 0; font-style: italic; font-size: 0.95rem; line-height: 1.65; color: var(--ink);">
+          Does this move Alex closer to <strong style="color:var(--green-text)">creating</strong> something — or does it move ablefy closer to <strong style="color:var(--red)">collecting</strong> something?
+        </blockquote>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 3 · 150-min stat -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="2">
+    <div class="eyebrow">The Reality</div>
+    <div class="stat-wrap">
+      <div class="stat-big">150<span style="color:var(--green-text)">min</span></div>
+      <div class="stat-sub">signup → course created, today</div>
+      <div class="stat-vs">vs. under 20 min on comparable platforms</div>
+      <p class="muted" style="margin-top: 8px; max-width: 400px; font-size: 0.9rem; text-align:center;">
+        This is not a product gap. It's a conversion problem. Every minute past the 15-minute evaluation window is a creator who doesn't convert.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 4 · Real-user evidence -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="3">
+    <div class="eyebrow">Validation</div>
+    <h2>This isn't just Alex</h2>
+    <div class="cols-65-35" style="gap:48px; align-items:start;">
+      <div>
+        <p class="lg" style="margin-bottom:24px;">I validated the audit across <span class="green-t">30+ independent sources</span> — German and English blogs, platform reviews, YouTube walkthroughs.</p>
+        <div style="background:rgba(23,223,135,0.08); border:1px solid rgba(23,223,135,0.2); border-radius:10px; padding:18px 22px; margin-bottom:20px;">
+          <div style="font-size:1.8rem; font-weight:800; color:var(--green-text); line-height:1;">~70–75%</div>
+          <div style="font-size:0.85rem; color:var(--muted); margin-top:4px;">of onboarding, UX, and course-creation feedback maps directly to what Alex experiences in his first session</div>
+        </div>
+        <p class="sm muted">These are not constructed pain points. They are the most consistent signal across the data.</p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="sm muted" style="margin-bottom:2px;">Sources included</div>
+          <ul style="padding-left:14px; margin-top:6px; font-size:0.82rem; line-height:1.8; color:var(--ink);">
+            <li>Capterra reviews</li>
+            <li>GetResponse platform comparisons</li>
+            <li>Everyblue.de walkthrough series</li>
+            <li>YouTube creator reviews (DE)</li>
+            <li>Trustpilot ratings</li>
+          </ul>
+        </div>
+        <div style="padding:12px 14px; background:var(--surface); border-radius:8px; font-size:0.75rem; color:var(--muted); line-height:1.5;">
+          Research period: Q1–Q2 2026<br>
+          Languages: German, English<br>
+          Source types: reviews, tutorials, comparisons
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 5 · Real user quotes -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide surface-bg" data-index="4">
+    <div class="eyebrow">What Real Creators Said</div>
+    <h2>Verified signals, not hypotheses</h2>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-de">Die vielen Funktionen können anfangs überfordern.</div>
+        <div class="quote-en">The many features can feel overwhelming at first.</div>
+        <div class="quote-source">Isabelle Moegelin — YouTube creator, ~5K views</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-de">Wenn du dich das allererste Mal einloggst, kann das ziemlich überwältigend wirken.</div>
+        <div class="quote-en">When you first log in, it can seem quite overwhelming.</div>
+        <div class="quote-source">Everyblue.de — first-login review</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-de">Die Kurserstellung wäre mir ohne Masterclass und Tutorials niemals gelungen.</div>
+        <div class="quote-en">Course creation would never have worked for me without tutorials and a Masterclass.</div>
+        <div class="quote-source">Martina L. — Capterra, 4/5 stars</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 6 · Transition: Three blockers -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide tr-dark" data-index="5">
+    <div class="tr-center">
+      <div class="tr-title">Three blockers stand between<br>Alex and his goal</div>
+      <div class="tr-tag">Onboarding · Creation · Community</div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 7 · Three blockers table -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide white" data-index="6">
+    <div class="eyebrow">The Problem</div>
+    <h2>Three Blockers</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:100px;">Blocker</th>
+          <th>What happens</th>
+          <th style="width:110px;">Time lost</th>
+          <th>Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Onboarding</strong></td>
+          <td>6-step data collection form, compliance warnings, phone number — all before Alex creates anything</td>
+          <td style="color:var(--red); font-weight:600;">~8 min</td>
+          <td>100% of new users delayed</td>
+        </tr>
+        <tr>
+          <td><strong>2. Course Creation</strong></td>
+          <td>5 payment models, 12 Advanced Settings toggles, legacy page builder, buried content tab, no guidance</td>
+          <td style="color:var(--red); font-weight:600;">~45 min – 3 hrs</td>
+          <td>Alex questions if ablefy is too complex</td>
+        </tr>
+        <tr style="opacity:0.55;">
+          <td><strong>3. Community</strong></td>
+          <td>Redirect to foroom.ai, separate auth, blank page dead end, no return path</td>
+          <td>~15 min</td>
+          <td>Trust tax — feels like a different product</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:20px; padding:12px 16px; background:rgba(23,223,135,0.08); border-left:3px solid var(--green-text); border-radius:0 8px 8px 0;">
+      <strong style="color:var(--green-text);">This case study addresses Blockers 1 and 2.</strong>
+      <span class="sm muted" style="margin-left:8px;">Blocker 3 requires platform-level fixes outside this scope.</span>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 8 · Root cause -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="7">
+    <div class="eyebrow">Root Cause</div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; max-width:780px;">
+      <p style="font-size: clamp(1.3rem, 2.5vw, 1.7rem); font-weight:600; line-height:1.45; color:var(--ink); margin-bottom:28px;">
+        The platform is built for <span style="color:var(--red); font-weight:700;">operators who already know what they're doing</span> — not for creators who are still deciding whether to stay.
+      </p>
+      <p class="muted" style="font-size:1rem; line-height:1.65;">Ablefy optimizes for data completion rather than user momentum. The 6-step onboarding form, the compliance banners, the 5 payment models — these all serve the platform, not the creator.</p>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 9 · 11 Issues -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide white" data-index="8">
+    <div class="eyebrow">Full Audit</div>
+    <h2>11 Issues · 2 Pain Points</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:110px;">Step</th>
+          <th>Challenge</th>
+          <th style="width:60px;">Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Signup</td><td>Phone required, no social login</td><td><span class="tag t-pp1">PP1</span></td></tr>
+        <tr><td>Dashboard</td><td>3 compliance banners on first load</td><td><span class="tag t-pp1">PP1</span></td></tr>
+        <tr><td>Onboarding</td><td>6-step form, zero output for Alex</td><td><span class="tag t-pp1">PP1</span></td></tr>
+        <tr><td>Dashboard</td><td>Admin tasks mixed with creation steps</td><td><span class="tag t-pp1">PP1</span></td></tr>
+        <tr><td>Creation</td><td>5 payment tiles + 12 Advanced Settings toggles</td><td><span class="tag t-pp2">PP2</span></td></tr>
+        <tr><td>Creation</td><td>UI elements shift without transitions</td><td><span class="tag t-pp2">PP2</span></td></tr>
+        <tr><td>Creation</td><td>"Upload from library" label mismatch</td><td><span class="tag t-pp2">PP2</span></td></tr>
+        <tr><td>Creation</td><td>"Previous" button closes modal</td><td><span class="tag t-pp2">PP2</span></td></tr>
+        <tr><td>Post-creation</td><td>Primary action buried below 3 secondary options</td><td><span class="tag t-pp2">PP2</span></td></tr>
+        <tr><td>Products</td><td>Content tab hidden, no "add first lesson" prompt</td><td><span class="tag t-pp2">PP2</span></td></tr>
+        <tr><td>Content</td><td>Legacy page builder requires a learning curve</td><td><span class="tag t-pp2">PP2</span></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:14px; font-size:0.8rem; color:var(--muted);">
+      <span class="tag t-pp1" style="margin-right:6px;">PP1</span> Data collection before value delivery &nbsp;·&nbsp;
+      <span class="tag t-pp2" style="margin-right:6px;">PP2</span> Cognitive overload during creation
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 10 · Transition: Option 01 -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide tr-green" data-index="9">
+    <div class="tr-center">
+      <div class="tr-title" style="color:var(--dark);">Option 01</div>
+      <div style="font-size:1.2rem; font-weight:600; color:rgba(0,0,0,0.6); margin-top:12px;">Fix the Current Flow</div>
+      <div style="margin-top:18px; display:inline-block; background:rgba(0,0,0,0.1); padding:7px 18px; border-radius:6px; font-size:0.82rem; font-weight:600; color:rgba(0,0,0,0.55);">Addresses Blocker 1 · Pain Point 1</div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 11 · Scope decision -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="10">
+    <div class="eyebrow">Why This Scope</div>
+    <h2>Signup → Course Created</h2>
+    <div class="cols-2" style="gap:40px; align-items:start;">
+      <div>
+        <p style="margin-bottom:20px; color:var(--muted);">Why Blockers 1 + 2, not community:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.88rem; line-height:1.5;">
+            <span style="color:var(--green-text); font-weight:700;">→</span>
+            Affects <strong style="color:var(--green-text);">100%</strong> of new users — not a subset
+          </li>
+          <li style="display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.88rem; line-height:1.5;">
+            <span style="color:var(--green-text); font-weight:700;">→</span>
+            Highest-motivation moment — Alex is most willing to invest effort right after signup
+          </li>
+          <li style="display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.88rem; line-height:1.5;">
+            <span style="color:var(--green-text); font-weight:700;">→</span>
+            Contains all 11 of the challenges found
+          </li>
+          <li style="display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.88rem; line-height:1.5;">
+            <span style="color:var(--green-text); font-weight:700;">→</span>
+            Competitors (Kajabi) solve this in <strong style="color:var(--green-text);">under 3 minutes</strong>
+          </li>
+          <li style="display:flex; gap:10px; padding:10px 0; font-size:0.88rem; line-height:1.5;">
+            <span style="color:var(--green-text); font-weight:700;">→</span>
+            Directly supports ablefy's 2026 roadmap: reliability, stability, AI-first
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div style="background: var(--surface); border-radius:12px; padding:22px; margin-bottom:16px;">
+          <div class="sm muted" style="margin-bottom:8px;">Target outcome</div>
+          <div style="font-size:1.4rem; font-weight:700; color:var(--ink);">~150 min</div>
+          <div style="font-size:0.8rem; color:var(--muted); margin:4px 0 16px;">current time-to-value</div>
+          <div style="font-size:1.4rem; font-weight:700; color:var(--green-text);">~5 min</div>
+          <div style="font-size:0.8rem; color:var(--muted); margin-top:4px;">after Option 01</div>
+        </div>
+        <div style="background: rgba(23,223,135,0.08); border: 1px solid rgba(23,223,135,0.2); border-radius:10px; padding:16px 18px;">
+          <div style="font-size:0.8rem; font-weight:600; color:var(--green-text); margin-bottom:4px;">Ships in weeks</div>
+          <div style="font-size:0.8rem; color:var(--muted);">Each change is independent and incremental. No architectural changes needed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 12 · Option 01 changes (before/after) -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide white" data-index="11">
+    <div class="eyebrow">Option 01 — The Changes</div>
+    <h2>Before & After</h2>
+    <div class="compare">
+      <div class="compare-b">
+        <div class="compare-header">Before</div>
+        <div class="compare-body">
+          <div class="compare-row">6-step onboarding form — name, phone, shop name, business type, price range, sales goal, audience, website, revenue goal</div>
+          <div class="compare-row">3 compliance banners shown on dashboard first load</div>
+          <div class="compare-row">5 payment models + 12 Advanced Settings toggles during course creation</div>
+          <div class="compare-row">Primary "Add Course Content" CTA buried below 3 secondary options</div>
+          <div class="compare-row">Content tab hidden in product detail — no prompt to add a lesson</div>
+        </div>
+      </div>
+      <div class="compare-divider"></div>
+      <div class="compare-a">
+        <div class="compare-header">After</div>
+        <div class="compare-body">
+          <div class="compare-row">Name + email + password only — <strong style="color:var(--green-text);">30 seconds</strong>. All business data moved to Settings, post-creation.</div>
+          <div class="compare-row">Compliance moved to Settings → Profile. Never shown on first load.</div>
+          <div class="compare-row">Single "set your price" field. Smart defaults. Payment options accessible later.</div>
+          <div class="compare-row">"Add Course Content" leads. All other options follow or are removed.</div>
+          <div class="compare-row">Inline module + lesson creation. "Add your first lesson" prompt visible immediately.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 13 · Option 01 flow -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="12">
+    <div class="eyebrow">Option 01 — The Flow</div>
+    <h2>Signup → Course Created · Under 5 Minutes</h2>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:20px;">
+      <div class="flow" style="align-items:flex-start;">
+        <div class="flow-box active-box">
+          <div class="flow-route">/signup</div>
+          <div class="flow-label">Name · Email · Password</div>
+          <div class="flow-detail">Nothing else. No phone, no shop name.</div>
+          <div class="flow-time">30 sec</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box active-box">
+          <div class="flow-route">/welcome</div>
+          <div class="flow-label">Welcome, {name}</div>
+          <div class="flow-detail">Show me how · Skip</div>
+          <div class="flow-time">10 sec</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box active-box">
+          <div class="flow-route">/dashboard</div>
+          <div class="flow-label">Guided Modal</div>
+          <div class="flow-detail">3 steps: Welcome → Create Product → Add Content</div>
+          <div class="flow-time">~90 sec</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box active-box">
+          <div class="flow-route">/products/:id/created</div>
+          <div class="flow-label">Product Ready</div>
+          <div class="flow-detail">Checkmark animation · SetupSteps tracker</div>
+          <div class="flow-time">30 sec</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box active-box">
+          <div class="flow-route">/products/:id?tab=content</div>
+          <div class="flow-label">Add Content</div>
+          <div class="flow-detail">Inline modules + lessons. No legacy builder.</div>
+          <div class="flow-time">90 sec</div>
+        </div>
+      </div>
+      <div style="background:var(--surface); border-radius:10px; padding:16px 20px;">
+        <div style="font-size:0.8rem; font-weight:600; color:var(--ink); margin-bottom:8px;">Dashboard hero adapts to state</div>
+        <div style="display:flex; gap:24px; font-size:0.8rem; color:var(--muted);">
+          <span><strong style="color:var(--ink);">No product</strong> → "Create your first product"</span>
+          <span><strong style="color:var(--ink);">No content</strong> → "Add content to your product"</span>
+          <span><strong style="color:var(--green-text);">Ready</strong> → "You're ready to go live"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 14 · Prototype walkthrough -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide white" data-index="13">
+    <div class="eyebrow">Prototype — Key Screens</div>
+    <h2>Built with Claude · React + Vite + SQLite</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; flex:1; align-content:start; margin-top:4px;">
+      <div class="card">
+        <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/signup</div>
+        <div class="sm" style="font-weight:600; margin-bottom:6px;">Signup</div>
+        <p class="sm muted">Name, email, password. One screen. 30 seconds. All business data deferred to Settings.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/welcome</div>
+        <div class="sm" style="font-weight:600; margin-bottom:6px;">Welcome</div>
+        <p class="sm muted">Personalized greeting. "Show me how" or "Skip." No data collected, no business questions.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/dashboard</div>
+        <div class="sm" style="font-weight:600; margin-bottom:6px;">Dashboard</div>
+        <p class="sm muted">Blur-overlay modal guides first session. Hero card adapts. SetupSteps tracker persists.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/products</div>
+        <div class="sm" style="font-weight:600; margin-bottom:6px;">Products list</div>
+        <p class="sm muted">"Sell" renamed to "Live." Dropdown positioning fixed. Min-height 640px prevents collapse.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/products/:id/created</div>
+        <div class="sm" style="font-weight:600; margin-bottom:6px;">Product Created</div>
+        <p class="sm muted">Animated checkmark. "Add Course Content" leads. "More options" disclosure replaced with SetupSteps.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:0.68rem; font-family:monospace; color:var(--muted); margin-bottom:6px;">/products/:id?tab=content</div>
+        <div class="sm" style="font-weight:600; margin-bottom:6px;">Content Tab</div>
+        <p class="sm muted">Inline module + lesson creation. Saving first module sets localStorage flag → dashboard advances automatically.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 15 · Transition: Option 02 -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide tr-dark" data-index="14">
+    <div class="tr-center">
+      <div class="tr-title">Option 02</div>
+      <div style="font-size:1.2rem; font-weight:500; color:rgba(255,255,255,0.55); margin-top:12px;">AI-First Course Creation</div>
+      <div class="tr-tag">Addresses All 11 Issues · Conceptual</div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 16 · Option 02 vision -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide dark" data-index="15">
+    <div class="eyebrow">Option 02 — The Vision</div>
+    <h2 style="color:white;">Signup → Ready Course · Under 3 Minutes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:100px;">Step</th>
+          <th style="width:70px;">Time</th>
+          <th>What happens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:rgba(255,255,255,0.9); font-weight:600;">Signup</td>
+          <td style="color:var(--green); font-weight:600;">30 sec</td>
+          <td>Name, email, password. No phone. No shop name.</td>
+        </tr>
+        <tr>
+          <td style="color:rgba(255,255,255,0.9); font-weight:600;">AI Chatbot</td>
+          <td style="color:var(--green); font-weight:600;">60 sec</td>
+          <td>Replaces the 6-step form. Alex says "I want to sell an AI training course for €1,499." 2–3 follow-ups. Same data, zero friction.</td>
+        </tr>
+        <tr>
+          <td style="color:rgba(255,255,255,0.9); font-weight:600;">Course Generated</td>
+          <td style="color:var(--green); font-weight:600;">30 sec</td>
+          <td>AI creates: course structure with modules, product page with description, checkout with defaults, landing page. Alex sees a <strong style="color:var(--green);">complete course</strong>, not a blank canvas.</td>
+        </tr>
+        <tr>
+          <td style="color:rgba(255,255,255,0.9); font-weight:600;">Edit or Fresh</td>
+          <td style="color:var(--muted);">—</td>
+          <td>Edit what was generated, or start from scratch. The difference: editing something that exists vs. learning how to build from nothing.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:18px; padding:14px 18px; background:rgba(23,223,135,0.1); border:1px solid rgba(23,223,135,0.2); border-radius:8px; font-size:0.82rem; color:rgba(255,255,255,0.7);">
+      <strong style="color:var(--green);">Issues resolved: All 11.</strong> The problems don't get fixed — they disappear. The paradigm changes. Alex saves 3+ hours and removes the learning curve entirely.
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 17 · Option 02 — enrich layer -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide dark" data-index="16">
+    <div class="eyebrow">Option 02 — The MCP Integration Layer</div>
+    <h2 style="color:white;">Creators don't start from scratch</h2>
+    <div class="cols-2" style="gap:32px; align-items:start;">
+      <div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.9rem; line-height:1.65; margin-bottom:20px;">Alex already has a Canva deck, a Drive folder, a Notion page. After the AI generates an outline, an "Enrich this outline" panel lets him connect what he already built.</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:14px 16px; font-size:0.82rem; color:rgba(255,255,255,0.75);">
+            <strong style="color:var(--green);">Canva:</strong> "I found 18 slides in 4 sections. Use sections as modules, or slides as lessons?"
+          </div>
+          <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:14px 16px; font-size:0.82rem; color:rgba(255,255,255,0.75);">
+            <strong style="color:var(--green);">Drive:</strong> "I found 8 files in your folder. Attach to whole course, or match by module name?"
+          </div>
+          <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:14px 16px; font-size:0.82rem; color:rgba(255,255,255,0.75);">
+            <strong style="color:var(--green);">Notion:</strong> "5 H2 sections found. Replace AI outline with this structure, or fill in lesson descriptions?"
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
+          <div style="background:rgba(255,255,255,0.08); padding:10px 16px; font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:0.05em; text-transform:uppercase;">Old model vs AI-first</div>
+          <table style="margin:0;">
+            <thead>
+              <tr>
+                <th style="background:transparent; color:rgba(255,255,255,0.5);">Old</th>
+                <th style="background:transparent; color:rgba(255,255,255,0.5);">AI-first</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>"Describe your course in a text box"</td><td style="color:var(--green);">"Connect your existing Canva deck"</td></tr>
+              <tr><td>"Upload your assets one by one"</td><td style="color:var(--green);">"Point us at your Drive folder"</td></tr>
+              <tr><td>"Structure your course manually"</td><td style="color:var(--green);">"Sync your Notion page"</td></tr>
+              <tr><td>"Start over in ablefy"</td><td style="color:var(--green);">"Bring what you have"</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 18 · Risks -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide white" data-index="17">
+    <div class="eyebrow">Risks</div>
+    <h2>Three Risks, Three Mitigations</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:130px;">Risk</th>
+          <th>What could go wrong</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Adoption anxiety</strong></td>
+          <td>Removing the 6-step form creates uncertainty — creators wonder what they agreed to</td>
+          <td>Surface deferred fields as <strong style="color:var(--green-text);">optional wins</strong> after first product is created, not as skipped steps</td>
+        </tr>
+        <tr>
+          <td><strong>Two-path inconsistency</strong></td>
+          <td>The guided modal and direct creation route give different experiences. Engineering asks: which is the source of truth?</td>
+          <td>One creation flow. Guided modal for all new users. Full settings accessible <em>after</em> creation only.</td>
+        </tr>
+        <tr>
+          <td><strong>Measurement gap</strong></td>
+          <td>If <code>onboarding_events</code> isn't tracked correctly pre-launch, there's no baseline. Option 01 ships but can't be proven.</td>
+          <td>Log <code>signup_completed</code> and <code>product_created</code> <strong style="color:var(--green-text);">server-side before shipping</strong>. Baseline first.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 19 · Validation plan -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide light" data-index="18">
+    <div class="eyebrow">Validation Plan</div>
+    <h2>Three Steps to Ship with Confidence</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Validate the problem</div>
+          <div class="step-body">Talk to 3–5 creators who tried or considered a course platform in the last 6 months. No prototype yet. One question: <em>"What stopped you from launching?"</em> Confirms the 11 issues — or reveals something we missed.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Validate the solution</div>
+          <div class="step-body">3 moderated walkthroughs. One task: <em>"Sell an AI training course for €1,499. Start from signup."</em> Measure: time to product created · where they hesitate · whether they click "Add Course Content" without prompting. <strong style="color:var(--green-text);">Success: under 5 minutes, no one stuck on payment.</strong></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Validate the business case</div>
+          <div class="step-body">Track trial-to-product-created conversion weekly for 45 days post-launch (smaller cohort). A <strong style="color:var(--green-text);">10–15% lift</strong> confirms Option 01 worked. Flat means the blocker was elsewhere.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 20 · Recommendation -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide white" data-index="19">
+    <div class="eyebrow">Recommendation</div>
+    <h2>Ship Option 01. Validate Option 02.</h2>
+    <div style="flex:1; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+      <div style="display:grid; grid-template-columns:100px 1fr 90px; gap:0; border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+        <div style="padding:9px 16px; background:var(--surface); font-size:0.7rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted);">Track</div>
+        <div style="padding:9px 16px; background:var(--surface); font-size:0.7rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); border-left:1px solid var(--border);">What</div>
+        <div style="padding:9px 16px; background:var(--surface); font-size:0.7rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); border-left:1px solid var(--border);">When</div>
+
+        <div style="padding:14px 16px; border-top:1px solid var(--border); font-weight:600; font-size:0.85rem; color:var(--green-text);">Track 1</div>
+        <div style="padding:14px 16px; border-top:1px solid var(--border); border-left:1px solid var(--border); font-size:0.85rem; line-height:1.55;">3 creator interviews → prototype walkthroughs → ship if validated → measure for 30 days</div>
+        <div style="padding:14px 16px; border-top:1px solid var(--border); border-left:1px solid var(--border); font-size:0.82rem; color:var(--muted);">Weeks 1–4</div>
+
+        <div style="padding:14px 16px; border-top:1px solid var(--border); font-weight:600; font-size:0.85rem; color:var(--muted);">Track 2</div>
+        <div style="padding:14px 16px; border-top:1px solid var(--border); border-left:1px solid var(--border); font-size:0.85rem; line-height:1.55;">Use the same interviews to probe Option 02: <em>"Would an AI-generated course scaffold change how you evaluated ablefy?"</em></div>
+        <div style="padding:14px 16px; border-top:1px solid var(--border); border-left:1px solid var(--border); font-size:0.82rem; color:var(--muted);">Weeks 5–9</div>
+      </div>
+      <p class="muted sm">Track 2 ends with a data-backed, validated decision direction — not a hunch.</p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px;">
+        <div style="background:rgba(23,223,135,0.08); border:1px solid rgba(23,223,135,0.2); border-radius:8px; padding:14px 16px;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--green-text); margin-bottom:4px;">Option 01 ships now</div>
+          <div class="sm muted">Works within current architecture. ~5 min time-to-value. Low engineering risk.</div>
+        </div>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 16px;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--ink); margin-bottom:4px;">Option 02 is the competitive leap</div>
+          <div class="sm muted">Positions ablefy as the AI-first creator platform it claims to be. No competitor does this today.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 21 · My process -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide dark" data-index="20">
+    <div class="eyebrow">On My Process</div>
+    <h2 style="color:white;">The constraints became the test</h2>
+    <div class="process-grid" style="flex:1; align-content:start; margin-top:0;">
+      <div class="process-card">
+        <h3>No public design system</h3>
+        <p>I reverse-engineered one — extracting tokens, type scale, spacing, and component patterns directly from the live product before writing a line of prototype code.</p>
+      </div>
+      <div class="process-card">
+        <h3>Prototype under pressure</h3>
+        <p>Five hours. Runtime errors, dependency conflicts, broken state on reload. I kept the scope. Real conditions, not ideal ones.</p>
+      </div>
+      <div class="process-card">
+        <h3>One mental model, three screens</h3>
+        <p>The challenge wasn't any single screen. It was ensuring signup, creation, and post-creation feel like one product — not three features bolted together.</p>
+      </div>
+    </div>
+    <blockquote style="margin-top:24px; border-left:3px solid var(--green); padding:16px 20px; font-style:italic; font-size:0.95rem; color:rgba(255,255,255,0.7); line-height:1.65;">
+      Every decision was tested against the same question: does this serve the creator's intent, or the platform's?
+    </blockquote>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE 22 · Thank you -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide cover" data-index="21">
+    <div style="flex:1;"></div>
+    <div class="closing">
+      <div style="font-size:0.72rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--green); margin-bottom:24px;">Thank you</div>
+      <div class="closing-name">Ahmed Sarkawt</div>
+      <div class="closing-role">Product Designer · May 2026</div>
+      <div class="closing-email">cadis13otaku@gmail.com</div>
+      <div style="margin-top:40px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.08); display:flex; gap:32px; font-size:0.78rem; color:rgba(255,255,255,0.3);">
+        <div>
+          <div style="color:rgba(255,255,255,0.5); font-weight:600; margin-bottom:2px;">Prototype</div>
+          React · Vite · TypeScript · SQLite
+        </div>
+        <div>
+          <div style="color:rgba(255,255,255,0.5); font-weight:600; margin-bottom:2px;">Design</div>
+          Reverse-engineered from ablefy's live product
+        </div>
+        <div>
+          <div style="color:rgba(255,255,255,0.5); font-weight:600; margin-bottom:2px;">Research</div>
+          30+ DE/EN sources · 70–75% validated signal
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── Progress bar ── -->
+<div class="progress" id="progress"></div>
+
+<!-- ── Nav bar ── -->
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-title">ablefy — Onboarding Redesign</div>
+  </div>
+  <div class="nav-dots" id="dots"></div>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <div class="nav-hint">← → or click to navigate</div>
+    <div class="nav-counter" id="counter">1 / 22</div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prev-btn" disabled>&#8592;</button>
+      <button class="nav-btn" id="next-btn">&#8594;</button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  const counter  = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const prevBtn  = document.getElementById('prev-btn');
+  const nextBtn  = document.getElementById('next-btn');
+  const dotsWrap = document.getElementById('dots');
+
+  // Build dots (max 22 dots, group into sections)
+  const SECTIONS = [
+    { label: 'Intro',     count: 5 },
+    { label: 'Problem',   count: 4 },
+    { label: 'Option 01', count: 6 },
+    { label: 'Option 02', count: 3 },
+    { label: 'Ship it',   count: 4 },
+  ];
+  let dotEls = [];
+  SECTIONS.forEach(sec => {
+    for (let i = 0; i < sec.count; i++) {
+      const d = document.createElement('div');
+      d.className = 'nav-dot';
+      dotsWrap.appendChild(d);
+      dotEls.push(d);
+    }
+    // Section spacer
+    const sp = document.createElement('div');
+    sp.style.cssText = 'width:1px;height:12px;background:rgba(255,255,255,0.1);margin:0 4px;';
+    dotsWrap.appendChild(sp);
+  });
+
+  function updateDots() {
+    dotEls.forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function go(index) {
+    if (index < 0 || index >= total) return;
+
+    const prev = slides[current];
+    prev.classList.remove('active');
+    prev.classList.add(index > current ? 'past' : '');
+
+    // Reset the old "past" class on slides we're moving forward from
+    slides.forEach((s, i) => {
+      if (i !== current && i !== index) s.classList.remove('past', 'active');
+    });
+
+    current = index;
+    const next = slides[current];
+    next.classList.remove('past');
+    next.classList.add('active');
+
+    counter.textContent = `${current + 1} / ${total}`;
+    progress.style.width = `${((current + 1) / total) * 100}%`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    updateDots();
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      go(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(current - 1);
+    } else if (e.key === 'Home') {
+      go(0);
+    } else if (e.key === 'End') {
+      go(total - 1);
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  });
+
+  prevBtn.addEventListener('click', () => go(current - 1));
+  nextBtn.addEventListener('click', () => go(current + 1));
+
+  // Click left/right half of screen
+  document.getElementById('deck').addEventListener('click', e => {
+    const x = e.clientX / window.innerWidth;
+    if (x > 0.55) go(current + 1);
+    else if (x < 0.35) go(current - 1);
+  });
+
+  // Touch swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) go(dx < 0 ? current + 1 : current - 1);
+    touchX = null;
+  });
+
+  // Init
+  updateDots();
+  progress.style.width = `${(1 / total) * 100}%`;
+</script>
+</body>
+</html>

@@ -2,10 +2,10 @@ name: Prototype CI
 
 on:
   push:
-    branches: [prototype]
+    branches: [main, prototype]
     paths: [prototype/**]
   pull_request:
-    branches: [prototype]
+    branches: [main, prototype]
     paths: [prototype/**]
 
 jobs:
