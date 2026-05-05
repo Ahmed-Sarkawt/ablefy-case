@@ -93,7 +93,10 @@ describe('ProductsNew', () => {
       );
     });
     // Body must include paymentConfig (not the old flat priceCents)
-    const body = JSON.parse((fetchMock.mock.calls[0] as [string, { body: string }])[1].body) as Record<string, unknown>;
+    const productCall = fetchMock.mock.calls.find(
+      (c) => (c as [string])[0] === '/api/products'
+    ) as [string, { body: string }] | undefined;
+    const body = JSON.parse(productCall?.[1]?.body ?? 'null') as Record<string, unknown>;
     expect(body).toHaveProperty('paymentConfig');
     expect((body.paymentConfig as { type: string }).type).toBe('one_time');
     expect(body).not.toHaveProperty('priceCents');

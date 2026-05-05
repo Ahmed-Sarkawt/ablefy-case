@@ -72,7 +72,7 @@ describe('Signup', () => {
     await userEvent.click(screen.getByRole('button', { name: /create seller account/i }));
 
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith('/welcome', { replace: true });
+      expect(navigate).toHaveBeenCalledWith('/dashboard', { replace: true });
     });
     expect(window.localStorage.getItem('ablefy.userId')).toBe(
       '11111111-1111-4111-8111-111111111111'

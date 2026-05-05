@@ -37,11 +37,10 @@ describe('Dashboard', () => {
     expect(ctas).toHaveLength(1);
   });
 
-  it('lists the three example product types in the informational panel', () => {
+  it('shows the create-product hero and what-happens-next panel', () => {
     renderWithRouter();
-    expect(screen.getByRole('heading', { name: /^Course$/ })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /^Ebook$/ })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /^Membership$/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /create your first product/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /create product/i })).toBeInTheDocument();
   });
 
   it('renders no warning banner', () => {
@@ -52,7 +51,12 @@ describe('Dashboard', () => {
   });
 
   it('logs create_clicked and navigates to /products/new', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true }) });
+    const fetchMock = vi.fn().mockImplementation((url: string) =>
+      Promise.resolve({
+        ok: true,
+        json: async () => (String(url).includes('/api/products') ? [] : { ok: true }),
+      })
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     renderWithRouter();
