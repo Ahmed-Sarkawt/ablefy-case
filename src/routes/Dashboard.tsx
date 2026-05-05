@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Button, CabinetShell, SetupSteps } from '../components';
 import { useRequireAuth, getUserId, getUserName } from '../lib/auth';
 import { apiPost } from '../lib/api';
+import { track } from '../lib/analytics';
 import { REVEAL_CLASS, staggerAttr } from '../lib/motion';
 
 interface Shortcut { label: string; description: string; icon: JSX.Element; to: string }
@@ -436,6 +437,7 @@ function OnboardingModal({
         productType,
       });
       setNewProductId(res.productId);
+      track('product_created', { productId: res.productId, productType, priceCents });
       setStep('add-content');
     } catch {
       setFieldErrors({ general: 'Could not create product. Please try again.' });
@@ -464,14 +466,14 @@ function OnboardingModal({
             <div className="mt-8 flex flex-col gap-3">
               <button
                 type="button"
-                onClick={() => setStep('create-product')}
+                onClick={() => { track('onboarding_started'); setStep('create-product'); }}
                 className="w-full rounded-xl bg-sidebar px-4 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-sidebar/90"
               >
                 Show me how →
               </button>
               <button
                 type="button"
-                onClick={() => onDone()}
+                onClick={() => { track('onboarding_skipped'); onDone(); }}
                 className="w-full rounded-xl border border-border bg-bg-card px-4 py-3 text-[13px] font-medium text-ink transition-colors hover:bg-bg-surface"
               >
                 Skip — I&apos;ll figure it out
@@ -588,6 +590,7 @@ function OnboardingModal({
               <button
                 type="button"
                 onClick={() => {
+                  track('onboarding_completed', { action: 'add_content' });
                   onDone(newProductId);
                   navigate(`/products/${newProductId}?tab=content`);
                 }}
@@ -597,7 +600,7 @@ function OnboardingModal({
               </button>
               <button
                 type="button"
-                onClick={() => onDone(newProductId)}
+                onClick={() => { track('onboarding_completed', { action: 'later' }); onDone(newProductId); }}
                 className="w-full rounded-xl border border-border bg-bg-card px-4 py-2.5 text-[13px] font-medium text-ink transition-colors hover:bg-bg-surface"
               >
                 I&apos;ll do it later

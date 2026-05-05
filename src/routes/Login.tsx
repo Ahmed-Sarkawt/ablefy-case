@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../components';
 import { setSession } from '../lib/auth';
 import { apiPost, ApiRequestError } from '../lib/api';
+import { identifyUser, track } from '../lib/analytics';
 
 interface LoginResponse {
   userId: string;
@@ -46,6 +47,8 @@ export default function Login(): JSX.Element {
     try {
       const res = await apiPost<LoginResponse>('/api/auth/login', { email, password });
       setSession(res.userId, res.name);
+      identifyUser(res.userId, res.name);
+      track('user_logged_in', { email });
       navigate('/dashboard', { replace: true });
     } catch (err) {
       if (err instanceof ApiRequestError) {

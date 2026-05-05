@@ -12,6 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input, Checkbox } from '../components';
 import { setSession } from '../lib/auth';
 import { apiPost, ApiRequestError } from '../lib/api';
+import { identifyUser, track } from '../lib/analytics';
 
 interface SignupResponse {
   userId: string;
@@ -62,6 +63,8 @@ export default function Signup(): JSX.Element {
         newsletter,
       });
       setSession(res.userId, res.name);
+      identifyUser(res.userId, res.name);
+      track('user_signed_up', { email, newsletter });
       navigate('/dashboard', { replace: true });
     } catch (err) {
       if (err instanceof ApiRequestError) {

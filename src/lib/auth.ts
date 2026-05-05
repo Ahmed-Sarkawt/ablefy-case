@@ -63,6 +63,7 @@ export async function verifySession(): Promise<{ userId: string; name: string } 
 export function clearSession(): void {
   clearLocalCache();
   fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+  import('./analytics').then(({ resetUser }) => resetUser()).catch(() => {});
 }
 
 /* ── Auth hook ── */
