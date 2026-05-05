@@ -6,7 +6,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default [
-  { ignores: ['dist', 'node_modules', 'server/db/*.db', '**/*.cjs'] },
+  { ignores: ['dist', 'node_modules', 'server/db/*.db', '**/*.cjs', 'prototype/.vite/**'] },
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: { parser: tsparser, ecmaVersion: 2022, sourceType: 'module' },

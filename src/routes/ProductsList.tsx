@@ -326,8 +326,8 @@ function ProductThumb({ url, name }: { url: string | null; name: string }): JSX.
       <img
         src={url}
         alt=""
+        role="presentation"
         className="h-10 w-10 flex-shrink-0 rounded-lg object-cover"
-        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
       />
     );
   }
