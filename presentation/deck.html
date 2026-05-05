@@ -277,6 +277,37 @@
       z-index: 101;
     }
 
+    /* ── Hobby pills with tooltips ── */
+    .hobby {
+      position: relative;
+      display: inline-flex; align-items: center;
+      padding: 4px 11px; border-radius: 20px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09);
+      font-size: 0.72rem; color: rgba(255,255,255,0.5);
+      cursor: default;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+    }
+    .hobby:hover {
+      background: rgba(23,223,135,0.12);
+      border-color: rgba(23,223,135,0.35);
+      color: rgba(255,255,255,0.9);
+    }
+    .hobby::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark); color: var(--green);
+      font-size: 0.62rem; font-weight: 600; white-space: nowrap;
+      padding: 4px 10px; border-radius: 6px;
+      border: 1px solid rgba(23,223,135,0.25);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.15s 0.05s;
+      z-index: 10;
+    }
+    .hobby:hover::after { opacity: 1; }
+
     /* ══ Responsive ═══════════════════════════════════════════ */
 
     /* ─ Tablet landscape ≤1024px ─ */
@@ -430,12 +461,12 @@
 
         <div style="font-size:0.62rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:10px;">Outside work</div>
         <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <span style="padding:4px 11px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); font-size:0.72rem; color:rgba(255,255,255,0.5);">🏃 Running</span>
-          <span style="padding:4px 11px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); font-size:0.72rem; color:rgba(255,255,255,0.5);">🧗 Bouldering</span>
-          <span style="padding:4px 11px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); font-size:0.72rem; color:rgba(255,255,255,0.5);">🥾 Hiking</span>
-          <span style="padding:4px 11px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); font-size:0.72rem; color:rgba(255,255,255,0.5);">🍳 Cooking</span>
-          <span style="padding:4px 11px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); font-size:0.72rem; color:rgba(255,255,255,0.5);">🤝 Networking</span>
-          <span style="padding:4px 11px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); font-size:0.72rem; color:rgba(255,255,255,0.5);">🏘️ Community</span>
+          <span class="hobby" data-tip="5:10 Pace Record">🏃 Running</span>
+          <span class="hobby" data-tip="V4–V5">🧗 Bouldering</span>
+          <span class="hobby" data-tip="On 23 mountains">🥾 Hiking</span>
+          <span class="hobby" data-tip="Any type of dish">🍳 Cooking</span>
+          <span class="hobby" data-tip="Meeting cool people">🤝 Networking</span>
+          <span class="hobby" data-tip="ProductLab, ProcessBerlin, Untitld">🏘️ Community</span>
         </div>
       </div>
 
@@ -506,7 +537,7 @@
           <div style="display:flex; align-items:baseline; gap:16px; padding:16px 0;">
             <span style="font-size:1.8rem; font-weight:800; color:rgba(23,223,135,0.2); letter-spacing:-0.04em; line-height:1; flex-shrink:0;">06</span>
             <div>
-              <div style="font-size:0.92rem; font-weight:600; color:var(--green); margin-bottom:3px;">QA</div>
+              <div style="font-size:0.92rem; font-weight:600; color:white; margin-bottom:3px;">QA</div>
               <div style="font-size:0.78rem; color:rgba(255,255,255,0.4);">The stage is yours</div>
             </div>
           </div>
@@ -1200,6 +1231,37 @@
           30+ DE/EN sources · 70–75% validated signal
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── -->
+  <!-- SLIDE · Appendix -->
+  <!-- ─────────────────────────────────────────────────────── -->
+  <div class="slide dark" data-index="appendix">
+    <div class="eyebrow">Appendix</div>
+    <h2 style="color:white; margin-bottom:40px;">References & Resources</h2>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:20px; max-width:640px;">
+
+      <div style="display:flex; align-items:baseline; gap:20px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="min-width:160px; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:rgba(255,255,255,0.4);">Full Audit</div>
+        <a href="https://www.notion.so/Onboarding-Experience-Audit-356392a256118193ad53ed747fc066ad" target="_blank" rel="noopener" style="color:var(--green); font-size:0.92rem; font-weight:600; text-decoration:none; border-bottom:1px solid rgba(23,223,135,0.3); padding-bottom:1px;">Onboarding Experience Audit →</a>
+      </div>
+
+      <div style="display:flex; align-items:baseline; gap:20px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="min-width:160px; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:rgba(255,255,255,0.4);">Recordings</div>
+        <a href="https://drive.google.com/drive/u/3/folders/1Tmo1sxvbqvAUw2VwHS-KFxXEGbXrYx30" target="_blank" rel="noopener" style="color:var(--green); font-size:0.92rem; font-weight:600; text-decoration:none; border-bottom:1px solid rgba(23,223,135,0.3); padding-bottom:1px;">Google Drive →</a>
+      </div>
+
+      <div style="display:flex; align-items:baseline; gap:20px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="min-width:160px; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:rgba(255,255,255,0.4);">Design System</div>
+        <a href="https://github.com/Ahmed-Sarkawt/ablefy-case/blob/data/docs/DESIGN-SYSTEM.md" target="_blank" rel="noopener" style="color:var(--green); font-size:0.92rem; font-weight:600; text-decoration:none; border-bottom:1px solid rgba(23,223,135,0.3); padding-bottom:1px;">DESIGN-SYSTEM.md →</a>
+      </div>
+
+      <div style="display:flex; align-items:baseline; gap:20px; padding:18px 0;">
+        <div style="min-width:160px; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:rgba(255,255,255,0.4);">Building Stack</div>
+        <a href="https://github.com/Ahmed-Sarkawt/ablefy-case/tree/main" target="_blank" rel="noopener" style="color:var(--green); font-size:0.92rem; font-weight:600; text-decoration:none; border-bottom:1px solid rgba(23,223,135,0.3); padding-bottom:1px;">github.com/Ahmed-Sarkawt/ablefy-case →</a>
+      </div>
+
     </div>
   </div>
 
