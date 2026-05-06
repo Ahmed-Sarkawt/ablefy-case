@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * /demo-reset — hidden route for presentation demos.
  * Clears all ablefy localStorage flags and the session cookie,

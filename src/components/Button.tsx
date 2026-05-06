@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Button — pill-shaped per ablefy cabinet screenshots (Generate Design folder).
  * Variants: primary (green), dark (black for flow CTAs), secondary (white outline),

@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * recordEvent — fire-and-forget POST to /api/events.
  * Failures are logged, not thrown — instrumentation must never block the flow.

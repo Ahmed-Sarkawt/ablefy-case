@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * /welcome — Step 2 of the redesigned flow per docs/FLOW.md.
  * Personalized greeting, one-sentence value prop, two paths:

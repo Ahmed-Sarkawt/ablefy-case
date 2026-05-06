@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Motion utilities. Thin helpers around CSS classes defined in animations.css.
  * No JS animation library — keeps bundle tiny and ensures cross-browser parity.

@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Product routes.
  *
@@ -20,49 +20,88 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import type Database from 'better-sqlite3';
+import { posthog } from '../lib/posthog';
 
 const Interval = z.enum(['weekly', 'monthly', 'yearly']);
 const OptFirstPayment = z.number().int().nonnegative().max(9_999_999).nullable().optional();
 
 const PaymentConfig = z.discriminatedUnion('type', [
   z.object({ type: z.literal('free') }),
-  z.object({ type: z.literal('one_time'),    priceCents: z.number().int().positive().max(9_999_999) }),
-  z.object({ type: z.literal('installment'), totalCents: z.number().int().positive().max(9_999_999), count: z.number().int().min(2).max(36), interval: Interval, firstPaymentCents: OptFirstPayment }),
-  z.object({ type: z.literal('subscription'),priceCents: z.number().int().positive().max(9_999_999), interval: Interval, trialDays: z.number().int().min(0).max(365).nullable(), firstPaymentCents: OptFirstPayment }),
-  z.object({ type: z.literal('limited'),     priceCents: z.number().int().positive().max(9_999_999), count: z.number().int().min(2).max(36), interval: Interval, firstPaymentCents: OptFirstPayment }),
+  z.object({ type: z.literal('one_time'), priceCents: z.number().int().positive().max(9_999_999) }),
+  z.object({
+    type: z.literal('installment'),
+    totalCents: z.number().int().positive().max(9_999_999),
+    count: z.number().int().min(2).max(36),
+    interval: Interval,
+    firstPaymentCents: OptFirstPayment,
+  }),
+  z.object({
+    type: z.literal('subscription'),
+    priceCents: z.number().int().positive().max(9_999_999),
+    interval: Interval,
+    trialDays: z.number().int().min(0).max(365).nullable(),
+    firstPaymentCents: OptFirstPayment,
+  }),
+  z.object({
+    type: z.literal('limited'),
+    priceCents: z.number().int().positive().max(9_999_999),
+    count: z.number().int().min(2).max(36),
+    interval: Interval,
+    firstPaymentCents: OptFirstPayment,
+  }),
 ]);
 
-const PaymentMethodId = z.enum(['paypal', 'card', 'bank_wire', 'sepa', 'pay_later', 'p24', 'apple_pay', 'google_pay', 'ideal']);
+const PaymentMethodId = z.enum([
+  'paypal',
+  'card',
+  'bank_wire',
+  'sepa',
+  'pay_later',
+  'p24',
+  'apple_pay',
+  'google_pay',
+  'ideal',
+]);
 
 const ProductBody = z.object({
-  userId:       z.string().uuid(),
-  name:         z.string().trim().min(3, 'Name must be at least 3 characters').max(100),
-  description:  z.string().trim().min(10, 'Description must be at least 10 characters').max(500),
+  userId: z.string().uuid(),
+  name: z.string().trim().min(3, 'Name must be at least 3 characters').max(100),
+  description: z.string().trim().min(10, 'Description must be at least 10 characters').max(500),
   coverImageUrl: z.string().trim().url('Enter a valid URL').max(500).optional().or(z.literal('')),
-  currency:     z.string().trim().length(3).default('EUR'),
+  currency: z.string().trim().length(3).default('EUR'),
   paymentConfig: PaymentConfig,
   paymentMethods: z.array(PaymentMethodId).default([]),
   // Plan display options:
-  planName:            z.string().max(100).nullable().optional(),
-  originalPriceCents:  z.number().int().nonnegative().max(9_999_999).nullable().optional(),
-  showNetPrice:        z.boolean().default(false),
-  payLaterDueDays:     z.number().int().min(1).max(365).nullable().optional(),
+  planName: z.string().max(100).nullable().optional(),
+  originalPriceCents: z.number().int().nonnegative().max(9_999_999).nullable().optional(),
+  showNetPrice: z.boolean().default(false),
+  payLaterDueDays: z.number().int().min(1).max(365).nullable().optional(),
   // Advanced settings:
-  productType:  z.enum(['digital', 'online_course', 'online_course_recorded']).default('online_course'),
+  productType: z
+    .enum(['digital', 'online_course', 'online_course_recorded'])
+    .default('online_course'),
   lifetimeAccess: z.boolean().default(true),
   durationMonths: z.number().int().positive().max(120).nullable().optional(),
   unavailableRedirect: z.enum(['shop', 'sold_out', 'another']).default('shop'),
-  position:     z.number().int().min(0).max(9999).nullable().optional(),
+  position: z.number().int().min(0).max(9999).nullable().optional(),
   overallLimit: z.number().int().positive().max(999999).nullable().optional(),
 });
 
-interface UserRow { id: string }
-interface SignupRow { occurred_at: number }
+interface UserRow {
+  id: string;
+}
+interface SignupRow {
+  occurred_at: number;
+}
 interface ProductListRow {
-  id: string; name: string; status: string;
-  price_cents: number; currency: string;
+  id: string;
+  name: string;
+  status: string;
+  price_cents: number;
+  currency: string;
   cover_image_url: string | null;
-  created_at: string; updated_at: string;
+  created_at: string;
+  updated_at: string;
 }
 interface ProductDetailRow extends ProductListRow {
   description: string;
@@ -86,15 +125,55 @@ function derivePaymentColumns(cfg: z.infer<typeof PaymentConfig>): {
 } {
   switch (cfg.type) {
     case 'free':
-      return { payment_model: 'free', price_cents: 0, payment_interval: null, installment_count: null, payment_count: null, trial_days: null, first_payment_cents: null };
+      return {
+        payment_model: 'free',
+        price_cents: 0,
+        payment_interval: null,
+        installment_count: null,
+        payment_count: null,
+        trial_days: null,
+        first_payment_cents: null,
+      };
     case 'one_time':
-      return { payment_model: 'one_time', price_cents: cfg.priceCents, payment_interval: null, installment_count: null, payment_count: null, trial_days: null, first_payment_cents: null };
+      return {
+        payment_model: 'one_time',
+        price_cents: cfg.priceCents,
+        payment_interval: null,
+        installment_count: null,
+        payment_count: null,
+        trial_days: null,
+        first_payment_cents: null,
+      };
     case 'installment':
-      return { payment_model: 'installment', price_cents: cfg.totalCents, payment_interval: cfg.interval, installment_count: cfg.count, payment_count: null, trial_days: null, first_payment_cents: cfg.firstPaymentCents ?? null };
+      return {
+        payment_model: 'installment',
+        price_cents: cfg.totalCents,
+        payment_interval: cfg.interval,
+        installment_count: cfg.count,
+        payment_count: null,
+        trial_days: null,
+        first_payment_cents: cfg.firstPaymentCents ?? null,
+      };
     case 'subscription':
-      return { payment_model: 'subscription', price_cents: cfg.priceCents, payment_interval: cfg.interval, installment_count: null, payment_count: null, trial_days: cfg.trialDays, first_payment_cents: cfg.firstPaymentCents ?? null };
+      return {
+        payment_model: 'subscription',
+        price_cents: cfg.priceCents,
+        payment_interval: cfg.interval,
+        installment_count: null,
+        payment_count: null,
+        trial_days: cfg.trialDays,
+        first_payment_cents: cfg.firstPaymentCents ?? null,
+      };
     case 'limited':
-      return { payment_model: 'limited', price_cents: cfg.priceCents, payment_interval: cfg.interval, installment_count: null, payment_count: cfg.count, trial_days: null, first_payment_cents: cfg.firstPaymentCents ?? null };
+      return {
+        payment_model: 'limited',
+        price_cents: cfg.priceCents,
+        payment_interval: cfg.interval,
+        installment_count: null,
+        payment_count: cfg.count,
+        trial_days: null,
+        first_payment_cents: cfg.firstPaymentCents ?? null,
+      };
   }
 }
 
@@ -129,9 +208,19 @@ export function createProductRoutes(db: Database.Database): Hono {
 
   router.patch('/:id/status', (c) => {
     const id = c.req.param('id');
-    const body = c.req.json().then((b: { status?: string }) => {
+    const body = c.req.json().then((b: { status?: string; userId?: string }) => {
       const status = b.status === 'published' ? 'published' : 'draft';
-      db.prepare('UPDATE products SET status = ?, updated_at = datetime(\'now\') WHERE id = ?').run(status, id);
+      db.prepare("UPDATE products SET status = ?, updated_at = datetime('now') WHERE id = ?").run(
+        status,
+        id
+      );
+      if (status === 'published' && b.userId) {
+        posthog.capture({
+          distinctId: b.userId,
+          event: 'product_published',
+          properties: { product_id: id },
+        });
+      }
       return c.json({ id, status });
     });
     return body;
@@ -149,11 +238,23 @@ export function createProductRoutes(db: Database.Database): Hono {
     }
 
     const {
-      userId, name, description, coverImageUrl, currency,
-      paymentConfig, paymentMethods,
-      planName, originalPriceCents, showNetPrice, payLaterDueDays,
-      productType, lifetimeAccess, durationMonths,
-      unavailableRedirect, position, overallLimit,
+      userId,
+      name,
+      description,
+      coverImageUrl,
+      currency,
+      paymentConfig,
+      paymentMethods,
+      planName,
+      originalPriceCents,
+      showNetPrice,
+      payLaterDueDays,
+      productType,
+      lifetimeAccess,
+      durationMonths,
+      unavailableRedirect,
+      position,
+      overallLimit,
     } = parsed.data;
 
     const user = db.prepare('SELECT id FROM users WHERE id = ?').get(userId) as UserRow | undefined;
@@ -172,27 +273,55 @@ export function createProductRoutes(db: Database.Database): Hono {
           unavailable_redirect, position, overall_limit)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).run(
-      productId, userId, name, description,
+      productId,
+      userId,
+      name,
+      description,
       coverImageUrl && coverImageUrl.length > 0 ? coverImageUrl : null,
-      pay.price_cents, currency,
-      pay.payment_model, pay.payment_interval, pay.installment_count,
-      pay.payment_count, pay.trial_days, pay.first_payment_cents,
+      pay.price_cents,
+      currency,
+      pay.payment_model,
+      pay.payment_interval,
+      pay.installment_count,
+      pay.payment_count,
+      pay.trial_days,
+      pay.first_payment_cents,
       paymentMethods.length > 0 ? JSON.stringify(paymentMethods) : null,
-      planName ?? null, originalPriceCents ?? null,
-      showNetPrice ? 1 : 0, payLaterDueDays ?? null,
-      productType, lifetimeAccess ? 1 : 0, durationMonths ?? null,
-      unavailableRedirect, position ?? null, overallLimit ?? null
+      planName ?? null,
+      originalPriceCents ?? null,
+      showNetPrice ? 1 : 0,
+      payLaterDueDays ?? null,
+      productType,
+      lifetimeAccess ? 1 : 0,
+      durationMonths ?? null,
+      unavailableRedirect,
+      position ?? null,
+      overallLimit ?? null
     );
 
     const signup = db
-      .prepare(`SELECT occurred_at FROM onboarding_events WHERE user_id = ? AND event_type = 'signup_completed' ORDER BY occurred_at ASC LIMIT 1`)
+      .prepare(
+        `SELECT occurred_at FROM onboarding_events WHERE user_id = ? AND event_type = 'signup_completed' ORDER BY occurred_at ASC LIMIT 1`
+      )
       .get(userId) as SignupRow | undefined;
     const timeSinceSignupMs = signup ? Date.now() - signup.occurred_at : null;
 
-    db.prepare('INSERT INTO onboarding_events (user_id, event_type, attributes) VALUES (?, ?, ?)').run(
-      userId, 'product_created',
-      JSON.stringify({ productId, timeSinceSignupMs })
-    );
+    db.prepare(
+      'INSERT INTO onboarding_events (user_id, event_type, attributes) VALUES (?, ?, ?)'
+    ).run(userId, 'product_created', JSON.stringify({ productId, timeSinceSignupMs }));
+
+    posthog.capture({
+      distinctId: userId,
+      event: 'product_created',
+      properties: {
+        product_id: productId,
+        product_type: productType,
+        payment_model: pay.payment_model,
+        currency,
+        price_cents: pay.price_cents,
+        time_since_signup_ms: timeSinceSignupMs,
+      },
+    });
 
     return c.json({ productId, status: 'draft' }, 201);
   });

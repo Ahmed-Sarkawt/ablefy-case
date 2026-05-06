@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Event routes — POST /api/events for onboarding instrumentation.
  * Used by every flow step to log time-to-value.

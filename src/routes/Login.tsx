@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * /login — returning user sign-in.
  * Identical shell to Signup (same card height, same left banner structure).

@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Thin posthog-js wrappers for non-component call sites (auth, events).
  * Components should use the usePostHog hook from @posthog/react instead.

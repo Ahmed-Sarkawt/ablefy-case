@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * /products — lists all products for the authenticated user.
  * Based on the reference screenshot: sortable table with ID, thumbnail,

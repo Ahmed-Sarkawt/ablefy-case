@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  */
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';

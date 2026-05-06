@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * SetupSteps — 4-step onboarding progress tracker.
  * Steps 1 & 2 are functional in the MVP; 3 & 4 unlock when prior steps are done.

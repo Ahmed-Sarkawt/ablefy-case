@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Disclosure — accessible expand/collapse with chevron and aria-expanded.
  * Smooth height transition; respects prefers-reduced-motion via animations.css.

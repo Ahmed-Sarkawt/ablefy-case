@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 
 HEADER='/**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  * See LICENSE in the project root.
  */
 '

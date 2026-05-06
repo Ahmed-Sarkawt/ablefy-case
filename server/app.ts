@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Hono app factory. Lets index.ts boot for prod and tests instantiate
  * with an in-memory DB.

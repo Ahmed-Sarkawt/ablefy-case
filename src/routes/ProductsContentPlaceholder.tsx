@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * /products/:id/content — stub destination for "Add Course Content".
  * The lesson builder is out of scope for Option 01 per docs/PLAN.md.

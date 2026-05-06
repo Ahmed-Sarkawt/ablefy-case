@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * In-memory SQLite fixture for integration tests.
  * Each test gets a fresh DB so they're isolated and parallelizable.

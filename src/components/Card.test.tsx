@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  */
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';

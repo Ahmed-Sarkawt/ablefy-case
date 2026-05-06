@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * CabinetShell — authenticated layout per docs/DESIGN-SYSTEM.md.
  */

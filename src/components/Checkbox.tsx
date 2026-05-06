@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Checkbox — labeled checkbox with optional helper text.
  * Wraps native input for accessibility and keyboard support.

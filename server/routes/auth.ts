@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Auth routes — real server-side sessions via HTTP-only cookie.
  *
@@ -15,28 +15,38 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { randomUUID } from 'node:crypto';
 import type Database from 'better-sqlite3';
+import { posthog } from '../lib/posthog';
 
 const COOKIE = 'ablefy_sid';
 const SESSION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 const SignupBody = z.object({
-  name:       z.string().trim().min(2, 'Name must be at least 2 characters').max(80),
-  email:      z.string().trim().toLowerCase().email('Enter a valid email'),
-  password:   z.string().min(8, 'Password must be at least 8 characters').max(200),
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(80),
+  email: z.string().trim().toLowerCase().email('Enter a valid email'),
+  password: z.string().min(8, 'Password must be at least 8 characters').max(200),
   newsletter: z.boolean().optional(),
 });
 
 const LoginBody = z.object({
-  email:    z.string().trim().toLowerCase().email('Enter a valid email'),
+  email: z.string().trim().toLowerCase().email('Enter a valid email'),
   password: z.string().min(1, 'Enter your password'),
 });
 
-interface UserRow { id: string; name: string; email: string; password_hash: string }
+interface UserRow {
+  id: string;
+  name: string;
+  email: string;
+  password_hash: string;
+}
 
 function createSession(db: Database.Database, userId: string): string {
   const id = randomUUID();
   const expiresAt = Date.now() + SESSION_MS;
-  db.prepare('INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)').run(id, userId, expiresAt);
+  db.prepare('INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)').run(
+    id,
+    userId,
+    expiresAt
+  );
   return id;
 }
 
@@ -59,7 +69,10 @@ export function createAuthRoutes(db: Database.Database): Hono {
     const parsed = SignupBody.safeParse(raw);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
-      return c.json({ error: first?.message ?? 'Invalid request', field: first?.path[0] ?? null }, 400);
+      return c.json(
+        { error: first?.message ?? 'Invalid request', field: first?.path[0] ?? null },
+        400
+      );
     }
     const { name, email, password } = parsed.data;
 
@@ -70,11 +83,26 @@ export function createAuthRoutes(db: Database.Database): Hono {
 
     const hash = await bcrypt.hash(password, 10);
     const userId = randomUUID();
-    db.prepare('INSERT INTO users (id, email, password_hash, name) VALUES (?, ?, ?, ?)').run(userId, email, hash, name);
-    db.prepare('INSERT INTO onboarding_events (user_id, event_type) VALUES (?, ?)').run(userId, 'signup_completed');
+    db.prepare('INSERT INTO users (id, email, password_hash, name) VALUES (?, ?, ?, ?)').run(
+      userId,
+      email,
+      hash,
+      name
+    );
+    db.prepare('INSERT INTO onboarding_events (user_id, event_type) VALUES (?, ?)').run(
+      userId,
+      'signup_completed'
+    );
 
     const sessionId = createSession(db, userId);
     setSessionCookie(c, sessionId);
+
+    posthog.identify({ distinctId: userId, properties: { name, email } });
+    posthog.capture({
+      distinctId: userId,
+      event: 'user_signed_up',
+      properties: { email, newsletter: parsed.data.newsletter ?? false },
+    });
 
     return c.json({ userId, name }, 201);
   });
@@ -85,11 +113,16 @@ export function createAuthRoutes(db: Database.Database): Hono {
     const parsed = LoginBody.safeParse(raw);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
-      return c.json({ error: first?.message ?? 'Invalid request', field: first?.path[0] ?? null }, 400);
+      return c.json(
+        { error: first?.message ?? 'Invalid request', field: first?.path[0] ?? null },
+        400
+      );
     }
     const { email, password } = parsed.data;
 
-    const user = db.prepare('SELECT id, name, email, password_hash FROM users WHERE email = ?').get(email) as UserRow | undefined;
+    const user = db
+      .prepare('SELECT id, name, email, password_hash FROM users WHERE email = ?')
+      .get(email) as UserRow | undefined;
     if (!user) {
       return c.json({ error: 'Incorrect email or password', field: 'email' }, 401);
     }
@@ -101,6 +134,8 @@ export function createAuthRoutes(db: Database.Database): Hono {
 
     const sessionId = createSession(db, user.id);
     setSessionCookie(c, sessionId);
+
+    posthog.capture({ distinctId: user.id, event: 'user_logged_in', properties: { email } });
 
     return c.json({ userId: user.id, name: user.name });
   });

@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Tailwind config wired to ablefy design tokens (see src/styles/tokens.css).
  * The principle: never hard-code values here. Read from CSS variables so the

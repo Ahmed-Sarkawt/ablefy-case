@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * Input — labeled text/email/password input per ablefy_design.md.
  * 40px height, 1px border, 8px radius, green soft focus ring, muted label.

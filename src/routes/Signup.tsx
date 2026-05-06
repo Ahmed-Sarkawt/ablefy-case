@@ -1,6 +1,6 @@
 /**
  * @license MIT
- * Copyright (c) 2026 Firat Gomi
+ * Copyright (c) 2026 Ahmed Sulaiman
  *
  * /signup — Create seller account.
  * Split layout: branded left block (seller image + ablefy logo) + right form.
