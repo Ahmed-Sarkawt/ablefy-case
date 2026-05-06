@@ -449,7 +449,7 @@ function OnboardingModal({
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
-      style={{ backgroundColor: 'color-mix(in srgb, var(--color-bg-page) 55%, transparent)' }}
+      style={{ backgroundColor: 'rgba(250,250,252,0.55)' }}
     >
       <div className="relative mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-border bg-bg-card shadow-fab">
 

@@ -19,7 +19,7 @@
  * Fixed 600px height — no UI shift when switching plans.
  * Uses <dialog> for native focus-trapping and Escape handling.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Button, Input } from './index';
 
 export type PaymentInterval = 'weekly' | 'monthly' | 'yearly';
@@ -429,13 +429,14 @@ function IntervalSelect({
   value: PaymentInterval;
   onChange: (v: PaymentInterval) => void;
 }): JSX.Element {
+  const id = useId();
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-ink" htmlFor="pm-interval">
+      <label className="text-sm font-medium text-ink" htmlFor={id}>
         Billing interval
       </label>
       <select
-        id="pm-interval"
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value as PaymentInterval)}
         className="h-10 w-full rounded-lg border border-border bg-bg-card px-3 text-sm text-ink outline-none transition-colors focus:border-primary focus:shadow-[var(--ring-primary)]"

@@ -13,7 +13,7 @@
  *
  * Tab is driven by ?tab= URL search param.
  */
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { CabinetShell } from '../components';
 import { useRequireAuth } from '../lib/auth';
@@ -169,13 +169,15 @@ export default function ProductDetail(): JSX.Element {
           {/* ── Tab nav ── */}
           <div className="border-b border-border bg-bg-card px-6">
             <div className="mx-auto max-w-5xl">
-              <nav aria-label="Product sections" className="-mb-px flex gap-1 overflow-x-auto">
+              <nav role="tablist" aria-label="Product sections" className="-mb-px flex gap-1 overflow-x-auto">
                 {TABS.map(({ id: tabId, label, community }) => (
                   <button
                     key={tabId}
+                    id={`tab-${tabId}`}
                     type="button"
                     role="tab"
                     aria-selected={activeTab === tabId}
+                    aria-controls={`panel-${tabId}`}
                     onClick={() => setTab(tabId)}
                     className={`flex items-center gap-1.5 whitespace-nowrap px-4 py-3.5 text-[13px] font-medium transition-colors duration-fast ${
                       activeTab === tabId
@@ -192,7 +194,12 @@ export default function ProductDetail(): JSX.Element {
           </div>
 
           {/* ── Tab content ── */}
-          <div className="px-4 py-6 sm:px-8 sm:py-8">
+          <div
+            id={`panel-${activeTab}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${activeTab}`}
+            className="px-4 py-6 sm:px-8 sm:py-8"
+          >
             <div className="mx-auto max-w-5xl">
               {activeTab === 'content'         && <ContentTab productId={product.id} />}
               {activeTab === 'product-details' && <ProductDetailsTab product={product} />}
@@ -534,10 +541,13 @@ function ProductDetailsTab({ product }: { product: ProductData }): JSX.Element {
                 className="w-full rounded-lg border border-border bg-bg-card px-4 py-2.5 text-[13px] text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30" />
             </FormField>
             <FormField label="Product type">
-              <select className="w-full rounded-lg border border-border bg-bg-card px-4 py-2.5 text-[13px] text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30">
-                <option value="digital">Digital · Online Course · Online Course (pre-recorded)</option>
-                <option value="online_course" selected={product.product_type === 'online_course'}>Online Course</option>
-                <option value="online_course_recorded" selected={product.product_type === 'online_course_recorded'}>Online Course (pre-recorded)</option>
+              <select
+                value={product.product_type ?? 'online_course'}
+                onChange={() => {}}
+                className="w-full rounded-lg border border-border bg-bg-card px-4 py-2.5 text-[13px] text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+              >
+                <option value="online_course">Online Course</option>
+                <option value="online_course_recorded">Online Course (pre-recorded)</option>
               </select>
             </FormField>
             <FormField label="Custom product URL">
@@ -789,12 +799,16 @@ function SectionHeader({ title, description }: { title: string; description: str
 function FormField({ label, required, helper, children }: {
   label: string; required?: boolean; helper?: string; children: React.ReactNode;
 }): JSX.Element {
+  const id = React.useId();
+  const childWithId = React.isValidElement(children)
+    ? React.cloneElement(children as React.ReactElement<{ id?: string }>, { id })
+    : children;
   return (
     <div>
-      <label className="mb-1.5 block text-[13px] font-medium text-ink">
+      <label htmlFor={id} className="mb-1.5 block text-[13px] font-medium text-ink">
         {label}{required && <span className="ml-0.5 text-error">*</span>}
       </label>
-      {children}
+      {childWithId}
       {helper && <p className="mt-1 text-[11px] text-muted">{helper}</p>}
     </div>
   );

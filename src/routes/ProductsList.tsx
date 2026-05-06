@@ -214,7 +214,6 @@ function ProductRow({
   return (
     <tr
       className="group cursor-pointer transition-colors duration-fast hover:bg-bg-surface"
-      onClick={onRowClick}
     >
       {/* ID */}
       <td className="px-4 py-3 font-mono text-[11px] text-muted">{shortId}</td>

@@ -17,7 +17,7 @@ test.describe('Onboarding flow: signup → course created', () => {
 
     /* ── 1. Signup ── */
     await page.goto(`${BASE}/signup`);
-    await expect(page.getByRole('heading', { name: /sign up/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /create seller account/i })).toBeVisible();
 
     await page.getByLabel(/name/i).fill('Alex Demo');
     await page.getByLabel(/email/i).fill(`alex+${Date.now()}@demo.test`);
@@ -27,7 +27,7 @@ test.describe('Onboarding flow: signup → course created', () => {
     /* ── 2. Welcome ── */
     await expect(page).toHaveURL(`${BASE}/welcome`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await page.getByRole('link', { name: /go to dashboard|skip|continue/i }).click();
+    await page.getByRole('button', { name: /show me how|skip/i }).first().click();
 
     /* ── 3. Dashboard ── */
     await expect(page).toHaveURL(`${BASE}/dashboard`);
@@ -63,7 +63,7 @@ test.describe('Onboarding flow: signup → course created', () => {
     await page.getByLabel(/password/i).fill('SecurePass123!');
     await page.getByRole('button', { name: /sign up/i }).click();
     await page.waitForURL(`${BASE}/welcome`);
-    await page.getByRole('link', { name: /go to dashboard|skip|continue/i }).click();
+    await page.getByRole('button', { name: /show me how|skip/i }).first().click();
     await page.waitForURL(`${BASE}/dashboard`);
 
     // Click Products in sidebar
@@ -79,7 +79,7 @@ test.describe('Onboarding flow: signup → course created', () => {
     await page.getByLabel(/password/i).fill('SecurePass123!');
     await page.getByRole('button', { name: /sign up/i }).click();
     await page.waitForURL(`${BASE}/welcome`);
-    await page.getByRole('link', { name: /go to dashboard|skip|continue/i }).click();
+    await page.getByRole('button', { name: /show me how|skip/i }).first().click();
     await page.waitForURL(`${BASE}/dashboard`);
 
     await expect(page.getByText(/conversion rate/i)).toBeVisible();

@@ -22,6 +22,8 @@ export function prefersReducedMotion(): boolean {
 
 /**
  * Build a stagger attribute for ordered reveal animations (1-indexed, max 4).
+ * Intentional cap at 4 — animations.css defines delays for data-stagger 1–4 only.
+ * Pass any index; values above 4 share the 150ms delay of index 4.
  */
 export function staggerAttr(index: number): { 'data-stagger': string } {
   const clamped = Math.min(Math.max(index, 1), 4);

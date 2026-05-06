@@ -65,6 +65,7 @@ export default function Signup(): JSX.Element {
       setSession(res.userId, res.name);
       identifyUser(res.userId, res.name);
       track('user_signed_up', { email, newsletter });
+      setSubmitting(false);
       navigate('/dashboard', { replace: true });
     } catch (err) {
       if (err instanceof ApiRequestError) {

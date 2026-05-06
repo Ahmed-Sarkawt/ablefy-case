@@ -10,7 +10,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const dbPath = join(here, 'dev.db');
+const dbPath = process.env.DB_PATH ?? join(here, 'dev.db');
 const schemaPath = join(here, 'schema.sql');
 
 const db = new Database(dbPath);

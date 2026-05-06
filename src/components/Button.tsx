@@ -23,7 +23,7 @@ const VARIANT_CLASSES: Record<Variant, string> = {
   primary:
     'bg-primary text-sidebar shadow-low hover:bg-primary-hover active:bg-primary-active disabled:bg-bg-surface disabled:text-muted disabled:shadow-none',
   dark:
-    'bg-black text-white shadow-low hover:bg-ink active:bg-black disabled:bg-[#eceef2] disabled:text-[#4a4a4a] disabled:shadow-none',
+    'bg-black text-white shadow-low hover:bg-ink active:bg-black disabled:bg-bg-canvas disabled:text-soft disabled:shadow-none',
   secondary:
     'bg-bg-surface text-ink hover:bg-border active:bg-border disabled:opacity-50',
   ghost:

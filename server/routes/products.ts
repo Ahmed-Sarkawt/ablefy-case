@@ -184,6 +184,7 @@ export function createProductRoutes(db: Database.Database): Hono {
   router.get('/', (c) => {
     const userId = c.req.query('userId');
     if (!userId) return c.json({ error: 'userId required' }, 400);
+    if (!z.string().uuid().safeParse(userId).success) return c.json({ error: 'Invalid userId' }, 400);
     const rows = db
       .prepare(
         `SELECT id, name, status, price_cents, currency, cover_image_url, created_at, updated_at

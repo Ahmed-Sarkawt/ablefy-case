@@ -426,15 +426,19 @@ function SettingsModal({ currentName, onClose, onSave }: {
 
   return (
     <div
-      role="presentation"
       className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm"
-      style={{ backgroundColor: 'color-mix(in srgb, var(--color-bg-page) 55%, transparent)' }}
+      style={{ backgroundColor: 'rgba(250,250,252,0.55)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
     >
-      <div className="relative mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-border bg-bg-card shadow-fab">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-modal-title"
+        className="relative mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-border bg-bg-card shadow-fab"
+      >
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-brand text-[15px] font-semibold text-ink">Account settings</h2>
+          <h2 id="settings-modal-title" className="font-brand text-[15px] font-semibold text-ink">Account settings</h2>
           <button type="button" onClick={onClose} aria-label="Close"
             className="flex h-7 w-7 items-center justify-center rounded-full text-muted hover:bg-bg-surface">
             <IconClose />
