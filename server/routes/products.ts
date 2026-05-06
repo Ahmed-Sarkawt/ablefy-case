@@ -226,7 +226,7 @@ export function createProductRoutes(db: Database.Database): Hono {
     const raw = await c.req.json().catch(() => null);
     const status = (raw as { status?: string } | null)?.status === 'published' ? 'published' : 'draft';
 
-    db.prepare("UPDATE products SET status = ?, updated_at = datetime('now') WHERE id = ?").run(status, id);
+    db.prepare("UPDATE products SET status = ?, updated_at = (strftime('%s','now') * 1000) WHERE id = ?").run(status, id);
 
     if (status === 'published') {
       posthog.capture({

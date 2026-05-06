@@ -38,7 +38,7 @@ export default function ProductsCreated(): JSX.Element {
 
   useEffect(() => {
     if (!id) return;
-    fetch(`/api/products/${id}`)
+    fetch(`/api/products/${id}`, { credentials: 'include' })
       .then((r) => (r.ok ? (r.json() as Promise<ProductSummary>) : Promise.reject()))
       .then((data) => setProductName(data.name))
       .catch(() => {
