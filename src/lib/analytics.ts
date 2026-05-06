@@ -2,20 +2,11 @@
  * @license MIT
  * Copyright (c) 2026 Firat Gomi
  *
- * PostHog analytics — thin wrapper so call sites stay clean.
- * Init once in main.tsx; identify after every login/signup.
+ * Thin posthog-js wrappers for non-component call sites (auth, events).
+ * Components should use the usePostHog hook from @posthog/react instead.
+ * Posthog is initialized in main.tsx before any of these are called.
  */
 import posthog from 'posthog-js';
-
-const KEY = import.meta.env.VITE_POSTHOG_KEY as string;
-
-export function initAnalytics(): void {
-  if (!KEY) return;
-  posthog.init(KEY, {
-    api_host: 'https://us.i.posthog.com',
-    defaults: '2026-01-30',
-  });
-}
 
 export function identifyUser(userId: string, name: string): void {
   posthog.identify(userId, { name });
