@@ -23,6 +23,19 @@ The persona is **Alex** — 28, AI influencer, 10K followers, 10–15 min evalua
 | Slides | Marp (Markdown → HTML / PDF) |
 | AI tooling | Claude Code · Claude Sonnet 4.6 |
 
+## Sub-agents
+
+Four Claude Code sub-agents run automatically during development:
+
+| Agent | Trigger | What it does |
+|-------|---------|-------------|
+| `code-reviewer` | Any write/edit in `src/` or `server/` | Reviews for MIT violations, a11y issues, design-system drift, and safety concerns. Tags findings by severity and marks which are auto-fixable. |
+| `bug-fixer` | After a `code-reviewer` report | Applies only findings tagged "Auto-fixable: yes". Never invents fixes — works strictly from the reviewer's queue. |
+| `test-writer` | New component added without tests | Generates Vitest unit and Playwright e2e tests. Writes failing tests first, then explains what they check. |
+| `presentation-updater` | Route added or flow step changed | Keeps `presentation/slides.md` in sync with the prototype — updates route list, flow steps, and screenshots. |
+
+Agent definitions live in [`.claude/agents/`](./.claude/agents/).
+
 ## Key docs
 
 - [Decision log](../../tree/data/docs/DECISIONS.md)
