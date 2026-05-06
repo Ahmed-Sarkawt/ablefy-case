@@ -34,6 +34,7 @@ export default function ProductsCreated(): JSX.Element {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [productName, setProductName] = useState<string | null>(null);
+  const [step2Done] = useState(() => window.localStorage.getItem('ablefy.step2_done') === '1');
 
   useEffect(() => {
     if (!id) return;
@@ -102,7 +103,7 @@ export default function ProductsCreated(): JSX.Element {
           <div className="mt-8 text-left">
             <SetupSteps
               hasProducts={true}
-              step2Done={window.localStorage.getItem('ablefy.step2_done') === '1'}
+              step2Done={step2Done}
             />
           </div>
         </Card>

@@ -10,8 +10,8 @@ import { PostHogProvider } from '@posthog/react';
 import App from './App';
 import './styles/index.css';
 
-posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_TOKEN as string, {
-  api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string ?? 'https://us.i.posthog.com',
+posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_TOKEN ?? '', {
+  api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
   defaults: '2026-01-30',
 });
 

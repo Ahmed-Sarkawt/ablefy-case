@@ -24,6 +24,7 @@ export async function apiPost<TRes>(path: string, body: unknown): Promise<TRes> 
   const res = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify(body),
   });
   if (!res.ok) {

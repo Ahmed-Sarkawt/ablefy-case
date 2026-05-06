@@ -79,8 +79,10 @@ export function useRequireAuth(): void {
       navigate('/login', { replace: true });
       return;
     }
+    let active = true;
     verifySession().then((user) => {
-      if (!user) navigate('/login', { replace: true });
+      if (active && !user) navigate('/login', { replace: true });
     });
+    return () => { active = false; };
   }, [navigate]);
 }

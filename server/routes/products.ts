@@ -17,6 +17,7 @@
  * paymentMethods — array of accepted method IDs the seller enables.
  */
 import { Hono } from 'hono';
+import { getCookie } from 'hono/cookie';
 import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import type Database from 'better-sqlite3';
@@ -206,24 +207,36 @@ export function createProductRoutes(db: Database.Database): Hono {
     return c.json(row);
   });
 
-  router.patch('/:id/status', (c) => {
+  router.patch('/:id/status', async (c) => {
+    const sid = getCookie(c, 'ablefy_sid');
+    if (!sid) return c.json({ error: 'Not authenticated' }, 401);
+
+    const session = db
+      .prepare('SELECT user_id FROM sessions WHERE id = ? AND expires_at > ?')
+      .get(sid, Date.now()) as { user_id: string } | undefined;
+    if (!session) return c.json({ error: 'Session expired' }, 401);
+
     const id = c.req.param('id');
-    const body = c.req.json().then((b: { status?: string; userId?: string }) => {
-      const status = b.status === 'published' ? 'published' : 'draft';
-      db.prepare("UPDATE products SET status = ?, updated_at = datetime('now') WHERE id = ?").run(
-        status,
-        id
-      );
-      if (status === 'published' && b.userId) {
-        posthog.capture({
-          distinctId: b.userId,
-          event: 'product_published',
-          properties: { product_id: id },
-        });
-      }
-      return c.json({ id, status });
-    });
-    return body;
+    const product = db
+      .prepare('SELECT user_id FROM products WHERE id = ?')
+      .get(id) as { user_id: string } | undefined;
+    if (!product) return c.json({ error: 'Product not found' }, 404);
+    if (product.user_id !== session.user_id) return c.json({ error: 'Forbidden' }, 403);
+
+    const raw = await c.req.json().catch(() => null);
+    const status = (raw as { status?: string } | null)?.status === 'published' ? 'published' : 'draft';
+
+    db.prepare("UPDATE products SET status = ?, updated_at = datetime('now') WHERE id = ?").run(status, id);
+
+    if (status === 'published') {
+      posthog.capture({
+        distinctId: session.user_id,
+        event: 'product_published',
+        properties: { product_id: id },
+      });
+    }
+
+    return c.json({ id, status });
   });
 
   router.post('/', async (c) => {

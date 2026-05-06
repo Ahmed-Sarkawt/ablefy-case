@@ -15,6 +15,7 @@ import { createApp } from './app';
 // Run migrations on every start (idempotent — CREATE TABLE IF NOT EXISTS)
 const here = dirname(fileURLToPath(import.meta.url));
 db.exec(readFileSync(join(here, 'db/schema.sql'), 'utf8'));
+db.prepare('DELETE FROM sessions WHERE expires_at < ?').run(Date.now());
 
 const app = createApp(db);
 

@@ -35,7 +35,7 @@ export default function ProductsList(): JSX.Element {
   useEffect(() => {
     const userId = getUserId();
     if (!userId) return;
-    fetch(`/api/products?userId=${userId}`)
+    fetch(`/api/products?userId=${userId}`, { credentials: 'include' })
       .then((r) => (r.ok ? (r.json() as Promise<Product[]>) : Promise.reject()))
       .then(setProducts)
       .catch(() => {})

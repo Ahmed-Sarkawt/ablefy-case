@@ -77,7 +77,7 @@ export default function Dashboard(): JSX.Element {
   useEffect(() => {
     const userId = getUserId();
     if (!userId) return;
-    fetch(`/api/products?userId=${userId}`)
+    fetch(`/api/products?userId=${userId}`, { credentials: 'include' })
       .then((r) => (r.ok ? (r.json() as Promise<Array<{ id: string; status: string }>>) : Promise.reject()))
       .then(setProducts)
       .catch(() => {});
