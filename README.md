@@ -23,20 +23,6 @@ The persona is **Alex** — 28, AI influencer, 10K followers, 10–15 min evalua
 | Slides | Marp (Markdown → HTML / PDF) |
 | AI tooling | Claude Code · Claude Sonnet 4.6 |
 
-## Quick start
-
-```bash
-# Clone and install
-git clone https://github.com/Ahmed-Sarkawt/ablefy-case.git
-cd ablefy-case
-
-# Run the prototype
-git checkout prototype
-cd prototype
-npm install
-npm run dev
-```
-
 ## Key docs
 
 - [Decision log](../../tree/data/docs/DECISIONS.md)
