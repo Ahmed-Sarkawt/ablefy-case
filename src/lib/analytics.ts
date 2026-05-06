@@ -7,16 +7,13 @@
  */
 import posthog from 'posthog-js';
 
-const KEY  = import.meta.env.VITE_POSTHOG_KEY as string;
-const HOST = import.meta.env.VITE_POSTHOG_HOST as string ?? 'https://us.i.posthog.com';
+const KEY = import.meta.env.VITE_POSTHOG_KEY as string;
 
 export function initAnalytics(): void {
   if (!KEY) return;
   posthog.init(KEY, {
-    api_host: HOST,
-    person_profiles: 'identified_only',
-    capture_pageview: true,
-    capture_pageleave: true,
+    api_host: 'https://us.i.posthog.com',
+    defaults: '2026-01-30',
   });
 }
 
