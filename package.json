@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "tsx server/index.ts",
-    "dev": "concurrently -n web,api -c green,cyan \"vite\" \"tsx watch server/index.ts\"",
+    "dev": "concurrently -n web,api -c green,cyan \"vite\" \"PORT=3002 tsx watch server/index.ts\"",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint . --max-warnings=0",
