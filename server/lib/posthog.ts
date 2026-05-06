@@ -7,7 +7,7 @@
  */
 import { PostHog } from 'posthog-node';
 
-export const posthog = new PostHog(process.env.POSTHOG_API_KEY ?? '', {
+export const posthog = new PostHog(process.env.POSTHOG_API_KEY ?? 'phc_disabled', {
   host: process.env.POSTHOG_HOST,
   enableExceptionAutocapture: true,
 });
